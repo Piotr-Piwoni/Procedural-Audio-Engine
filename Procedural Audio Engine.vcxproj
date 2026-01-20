@@ -1,162 +1,918 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-  </ItemGroup>
-  <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{6E736726-1F9D-40B1-8F35-426DF8E2C726}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Procedural_Audio_Engine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup>
-    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Procedural_Audio_Engine.cpp" />
-  </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+    <ItemGroup Label="ProjectConfigurations">
+        <ProjectConfiguration Include="Debug|x64">
+            <Configuration>Debug</Configuration>
+            <Platform>x64</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="Release|x64">
+            <Configuration>Release</Configuration>
+            <Platform>x64</Platform>
+        </ProjectConfiguration>
+    </ItemGroup>
+    <ItemGroup>
+        <ClCompile Include="src\core\Application.cpp"/>
+        <ClCompile Include="src\main.cpp">
+            <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+            <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+            <Optimization>Disabled</Optimization>
+            <SupportJustMyCode>true</SupportJustMyCode>
+            <AssemblerOutput>NoListing</AssemblerOutput>
+            <AssemblerListingLocation>Procedur.6E736726\x64\Debug\</AssemblerListingLocation>
+            <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+            <BrowseInformation>false</BrowseInformation>
+            <BrowseInformationFile>Procedur.6E736726\x64\Debug\</BrowseInformationFile>
+            <CompileAs>Default</CompileAs>
+            <UseDynamicDebugging>false</UseDynamicDebugging>
+            <ConformanceMode>true</ConformanceMode>
+            <DiagnosticsFormat>Column</DiagnosticsFormat>
+            <DisableLanguageExtensions>false</DisableLanguageExtensions>
+            <ErrorReporting>Prompt</ErrorReporting>
+            <ExpandAttributedSource>false</ExpandAttributedSource>
+            <ExceptionHandling>Sync</ExceptionHandling>
+            <EnableASAN>false</EnableASAN>
+            <EnableFuzzer>false</EnableFuzzer>
+            <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+            <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+            <EnableVectorLength>NotSet</EnableVectorLength>
+            <FloatingPointModel>Precise</FloatingPointModel>
+            <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+            <GenerateModuleDependencies>false</GenerateModuleDependencies>
+            <GenerateSourceDependencies>false</GenerateSourceDependencies>
+            <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+            <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+            <IntrinsicFunctions>false</IntrinsicFunctions>
+            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+            <LanguageStandard>stdcpp23</LanguageStandard>
+            <LanguageStandard_C>Default</LanguageStandard_C>
+            <MinimalRebuild>false</MinimalRebuild>
+            <ModuleDependenciesFile>Procedur.6E736726\x64\Debug\</ModuleDependenciesFile>
+            <ModuleOutputFile>Procedur.6E736726\x64\Debug\</ModuleOutputFile>
+            <OmitDefaultLibName>false</OmitDefaultLibName>
+            <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+            <WholeProgramOptimization>false</WholeProgramOptimization>
+            <ObjectFileName>Procedur.6E736726\x64\Debug\</ObjectFileName>
+            <CallingConvention>Cdecl</CallingConvention>
+            <ProgramDataBaseFileName>Procedur.6E736726\x64\Debug\vc143.pdb</ProgramDataBaseFileName>
+            <PrecompiledHeader>NotUsing</PrecompiledHeader>
+            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+            <PrecompiledHeaderOutputFile>Procedur.6E736726\x64\Debug\Procedural Audio Engine.pch</PrecompiledHeaderOutputFile>
+            <PreprocessToFile>false</PreprocessToFile>
+            <PreprocessKeepComments>false</PreprocessKeepComments>
+            <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+            <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+            <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+            <ShowIncludes>false</ShowIncludes>
+            <SourceDependenciesFile>Procedur.6E736726\x64\Debug\</SourceDependenciesFile>
+            <SuppressStartupBanner>true</SuppressStartupBanner>
+            <BufferSecurityCheck>true</BufferSecurityCheck>
+            <SmallerTypeCheck>false</SmallerTypeCheck>
+            <SpectreMitigation>false</SpectreMitigation>
+            <StructMemberAlignment>Default</StructMemberAlignment>
+            <TrackerLogDirectory>Procedur.6E736726\x64\Debug\Procedur.6E736726.tlog\</TrackerLogDirectory>
+            <TranslateIncludes>false</TranslateIncludes>
+            <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+            <TreatWarningAsError>false</TreatWarningAsError>
+            <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+            <UseFullPaths>true</UseFullPaths>
+            <WarningLevel>Level3</WarningLevel>
+            <XMLDocumentationFileName>Procedur.6E736726\x64\Debug\</XMLDocumentationFileName>
+            <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+            <IntelJCCErratum>false</IntelJCCErratum>
+            <BuildStlModules>false</BuildStlModules>
+            <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+            <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+            <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+            <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+            <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
+            <SDLCheck>true</SDLCheck>
+            <LinkCompiled>true</LinkCompiled>
+        </ClCompile>
+        <ClCompile Include="third-party\Glad\src\glad.c"/>
+        <ClCompile Include="third-party\ImGui\include\IMGUI\backend\imgui_impl_glfw.cpp"/>
+        <ClCompile Include="third-party\ImGui\include\IMGUI\backend\imgui_impl_opengl3.cpp"/>
+        <ClCompile Include="third-party\ImGui\include\IMGUI\imgui.cpp">
+            <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+            <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+            <Optimization>Disabled</Optimization>
+            <SupportJustMyCode>true</SupportJustMyCode>
+            <AssemblerOutput>NoListing</AssemblerOutput>
+            <AssemblerListingLocation>Procedur.6E736726\x64\Debug\</AssemblerListingLocation>
+            <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+            <BrowseInformation>false</BrowseInformation>
+            <BrowseInformationFile>Procedur.6E736726\x64\Debug\</BrowseInformationFile>
+            <CompileAs>Default</CompileAs>
+            <UseDynamicDebugging>false</UseDynamicDebugging>
+            <ConformanceMode>true</ConformanceMode>
+            <DiagnosticsFormat>Column</DiagnosticsFormat>
+            <DisableLanguageExtensions>false</DisableLanguageExtensions>
+            <ErrorReporting>Prompt</ErrorReporting>
+            <ExpandAttributedSource>false</ExpandAttributedSource>
+            <ExceptionHandling>Sync</ExceptionHandling>
+            <EnableASAN>false</EnableASAN>
+            <EnableFuzzer>false</EnableFuzzer>
+            <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+            <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+            <EnableVectorLength>NotSet</EnableVectorLength>
+            <FloatingPointModel>Precise</FloatingPointModel>
+            <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+            <GenerateModuleDependencies>false</GenerateModuleDependencies>
+            <GenerateSourceDependencies>false</GenerateSourceDependencies>
+            <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+            <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+            <IntrinsicFunctions>false</IntrinsicFunctions>
+            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+            <LanguageStandard>stdcpp23</LanguageStandard>
+            <LanguageStandard_C>Default</LanguageStandard_C>
+            <MinimalRebuild>false</MinimalRebuild>
+            <ModuleDependenciesFile>Procedur.6E736726\x64\Debug\</ModuleDependenciesFile>
+            <ModuleOutputFile>Procedur.6E736726\x64\Debug\</ModuleOutputFile>
+            <OmitDefaultLibName>false</OmitDefaultLibName>
+            <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+            <WholeProgramOptimization>false</WholeProgramOptimization>
+            <ObjectFileName>Procedur.6E736726\x64\Debug\</ObjectFileName>
+            <CallingConvention>Cdecl</CallingConvention>
+            <ProgramDataBaseFileName>Procedur.6E736726\x64\Debug\vc143.pdb</ProgramDataBaseFileName>
+            <PrecompiledHeader>NotUsing</PrecompiledHeader>
+            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+            <PrecompiledHeaderOutputFile>Procedur.6E736726\x64\Debug\Procedural Audio Engine.pch</PrecompiledHeaderOutputFile>
+            <PreprocessToFile>false</PreprocessToFile>
+            <PreprocessKeepComments>false</PreprocessKeepComments>
+            <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+            <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+            <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+            <ShowIncludes>false</ShowIncludes>
+            <SourceDependenciesFile>Procedur.6E736726\x64\Debug\</SourceDependenciesFile>
+            <SuppressStartupBanner>true</SuppressStartupBanner>
+            <BufferSecurityCheck>true</BufferSecurityCheck>
+            <SmallerTypeCheck>false</SmallerTypeCheck>
+            <SpectreMitigation>false</SpectreMitigation>
+            <StructMemberAlignment>Default</StructMemberAlignment>
+            <TrackerLogDirectory>Procedur.6E736726\x64\Debug\Procedur.6E736726.tlog\</TrackerLogDirectory>
+            <TranslateIncludes>false</TranslateIncludes>
+            <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+            <TreatWarningAsError>false</TreatWarningAsError>
+            <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+            <UseFullPaths>true</UseFullPaths>
+            <WarningLevel>Level3</WarningLevel>
+            <XMLDocumentationFileName>Procedur.6E736726\x64\Debug\</XMLDocumentationFileName>
+            <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+            <IntelJCCErratum>false</IntelJCCErratum>
+            <BuildStlModules>false</BuildStlModules>
+            <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+            <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+            <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+            <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+            <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
+            <SDLCheck>true</SDLCheck>
+            <AdditionalIncludeDirectories>W:\Projects\Code\C++\Abertay\Year 4\CMP407 - Audio Programming\Assessment\Procedural Audio Engine\third-party/ImGui;W:\Projects\Code\C++\Abertay\Year 4\CMP407 - Audio Programming\Assessment\Procedural Audio Engine\third-party/ImGui/backend;</AdditionalIncludeDirectories>
+            <LinkCompiled>true</LinkCompiled>
+        </ClCompile>
+        <ClCompile Include="third-party\ImGui\include\IMGUI\imgui_draw.cpp">
+            <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+            <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+            <Optimization>Disabled</Optimization>
+            <SupportJustMyCode>true</SupportJustMyCode>
+            <AssemblerOutput>NoListing</AssemblerOutput>
+            <AssemblerListingLocation>Procedur.6E736726\x64\Debug\</AssemblerListingLocation>
+            <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+            <BrowseInformation>false</BrowseInformation>
+            <BrowseInformationFile>Procedur.6E736726\x64\Debug\</BrowseInformationFile>
+            <CompileAs>Default</CompileAs>
+            <UseDynamicDebugging>false</UseDynamicDebugging>
+            <ConformanceMode>true</ConformanceMode>
+            <DiagnosticsFormat>Column</DiagnosticsFormat>
+            <DisableLanguageExtensions>false</DisableLanguageExtensions>
+            <ErrorReporting>Prompt</ErrorReporting>
+            <ExpandAttributedSource>false</ExpandAttributedSource>
+            <ExceptionHandling>Sync</ExceptionHandling>
+            <EnableASAN>false</EnableASAN>
+            <EnableFuzzer>false</EnableFuzzer>
+            <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+            <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+            <EnableVectorLength>NotSet</EnableVectorLength>
+            <FloatingPointModel>Precise</FloatingPointModel>
+            <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+            <GenerateModuleDependencies>false</GenerateModuleDependencies>
+            <GenerateSourceDependencies>false</GenerateSourceDependencies>
+            <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+            <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+            <IntrinsicFunctions>false</IntrinsicFunctions>
+            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+            <LanguageStandard>stdcpp23</LanguageStandard>
+            <LanguageStandard_C>Default</LanguageStandard_C>
+            <MinimalRebuild>false</MinimalRebuild>
+            <ModuleDependenciesFile>Procedur.6E736726\x64\Debug\</ModuleDependenciesFile>
+            <ModuleOutputFile>Procedur.6E736726\x64\Debug\</ModuleOutputFile>
+            <OmitDefaultLibName>false</OmitDefaultLibName>
+            <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+            <WholeProgramOptimization>false</WholeProgramOptimization>
+            <ObjectFileName>Procedur.6E736726\x64\Debug\</ObjectFileName>
+            <CallingConvention>Cdecl</CallingConvention>
+            <ProgramDataBaseFileName>Procedur.6E736726\x64\Debug\vc143.pdb</ProgramDataBaseFileName>
+            <PrecompiledHeader>NotUsing</PrecompiledHeader>
+            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+            <PrecompiledHeaderOutputFile>Procedur.6E736726\x64\Debug\Procedural Audio Engine.pch</PrecompiledHeaderOutputFile>
+            <PreprocessToFile>false</PreprocessToFile>
+            <PreprocessKeepComments>false</PreprocessKeepComments>
+            <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+            <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+            <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+            <ShowIncludes>false</ShowIncludes>
+            <SourceDependenciesFile>Procedur.6E736726\x64\Debug\</SourceDependenciesFile>
+            <SuppressStartupBanner>true</SuppressStartupBanner>
+            <BufferSecurityCheck>true</BufferSecurityCheck>
+            <SmallerTypeCheck>false</SmallerTypeCheck>
+            <SpectreMitigation>false</SpectreMitigation>
+            <StructMemberAlignment>Default</StructMemberAlignment>
+            <TrackerLogDirectory>Procedur.6E736726\x64\Debug\Procedur.6E736726.tlog\</TrackerLogDirectory>
+            <TranslateIncludes>false</TranslateIncludes>
+            <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+            <TreatWarningAsError>false</TreatWarningAsError>
+            <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+            <UseFullPaths>true</UseFullPaths>
+            <WarningLevel>Level3</WarningLevel>
+            <XMLDocumentationFileName>Procedur.6E736726\x64\Debug\</XMLDocumentationFileName>
+            <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+            <IntelJCCErratum>false</IntelJCCErratum>
+            <BuildStlModules>false</BuildStlModules>
+            <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+            <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+            <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+            <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+            <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
+            <SDLCheck>true</SDLCheck>
+            <AdditionalIncludeDirectories>W:\Projects\Code\C++\Abertay\Year 4\CMP407 - Audio Programming\Assessment\Procedural Audio Engine\third-party/ImGui;W:\Projects\Code\C++\Abertay\Year 4\CMP407 - Audio Programming\Assessment\Procedural Audio Engine\third-party/ImGui/backend;</AdditionalIncludeDirectories>
+            <LinkCompiled>true</LinkCompiled>
+        </ClCompile>
+        <ClCompile Include="third-party\ImGui\include\IMGUI\imgui_tables.cpp">
+            <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+            <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+            <Optimization>Disabled</Optimization>
+            <SupportJustMyCode>true</SupportJustMyCode>
+            <AssemblerOutput>NoListing</AssemblerOutput>
+            <AssemblerListingLocation>Procedur.6E736726\x64\Debug\</AssemblerListingLocation>
+            <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+            <BrowseInformation>false</BrowseInformation>
+            <BrowseInformationFile>Procedur.6E736726\x64\Debug\</BrowseInformationFile>
+            <CompileAs>Default</CompileAs>
+            <UseDynamicDebugging>false</UseDynamicDebugging>
+            <ConformanceMode>true</ConformanceMode>
+            <DiagnosticsFormat>Column</DiagnosticsFormat>
+            <DisableLanguageExtensions>false</DisableLanguageExtensions>
+            <ErrorReporting>Prompt</ErrorReporting>
+            <ExpandAttributedSource>false</ExpandAttributedSource>
+            <ExceptionHandling>Sync</ExceptionHandling>
+            <EnableASAN>false</EnableASAN>
+            <EnableFuzzer>false</EnableFuzzer>
+            <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+            <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+            <EnableVectorLength>NotSet</EnableVectorLength>
+            <FloatingPointModel>Precise</FloatingPointModel>
+            <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+            <GenerateModuleDependencies>false</GenerateModuleDependencies>
+            <GenerateSourceDependencies>false</GenerateSourceDependencies>
+            <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+            <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+            <IntrinsicFunctions>false</IntrinsicFunctions>
+            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+            <LanguageStandard>stdcpp23</LanguageStandard>
+            <LanguageStandard_C>Default</LanguageStandard_C>
+            <MinimalRebuild>false</MinimalRebuild>
+            <ModuleDependenciesFile>Procedur.6E736726\x64\Debug\</ModuleDependenciesFile>
+            <ModuleOutputFile>Procedur.6E736726\x64\Debug\</ModuleOutputFile>
+            <OmitDefaultLibName>false</OmitDefaultLibName>
+            <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+            <WholeProgramOptimization>false</WholeProgramOptimization>
+            <ObjectFileName>Procedur.6E736726\x64\Debug\</ObjectFileName>
+            <CallingConvention>Cdecl</CallingConvention>
+            <ProgramDataBaseFileName>Procedur.6E736726\x64\Debug\vc143.pdb</ProgramDataBaseFileName>
+            <PrecompiledHeader>NotUsing</PrecompiledHeader>
+            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+            <PrecompiledHeaderOutputFile>Procedur.6E736726\x64\Debug\Procedural Audio Engine.pch</PrecompiledHeaderOutputFile>
+            <PreprocessToFile>false</PreprocessToFile>
+            <PreprocessKeepComments>false</PreprocessKeepComments>
+            <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+            <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+            <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+            <ShowIncludes>false</ShowIncludes>
+            <SourceDependenciesFile>Procedur.6E736726\x64\Debug\</SourceDependenciesFile>
+            <SuppressStartupBanner>true</SuppressStartupBanner>
+            <BufferSecurityCheck>true</BufferSecurityCheck>
+            <SmallerTypeCheck>false</SmallerTypeCheck>
+            <SpectreMitigation>false</SpectreMitigation>
+            <StructMemberAlignment>Default</StructMemberAlignment>
+            <TrackerLogDirectory>Procedur.6E736726\x64\Debug\Procedur.6E736726.tlog\</TrackerLogDirectory>
+            <TranslateIncludes>false</TranslateIncludes>
+            <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+            <TreatWarningAsError>false</TreatWarningAsError>
+            <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+            <UseFullPaths>true</UseFullPaths>
+            <WarningLevel>Level3</WarningLevel>
+            <XMLDocumentationFileName>Procedur.6E736726\x64\Debug\</XMLDocumentationFileName>
+            <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+            <IntelJCCErratum>false</IntelJCCErratum>
+            <BuildStlModules>false</BuildStlModules>
+            <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+            <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+            <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+            <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+            <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
+            <SDLCheck>true</SDLCheck>
+            <AdditionalIncludeDirectories>W:\Projects\Code\C++\Abertay\Year 4\CMP407 - Audio Programming\Assessment\Procedural Audio Engine\third-party/ImGui;W:\Projects\Code\C++\Abertay\Year 4\CMP407 - Audio Programming\Assessment\Procedural Audio Engine\third-party/ImGui/backend;</AdditionalIncludeDirectories>
+            <LinkCompiled>true</LinkCompiled>
+        </ClCompile>
+        <ClCompile Include="third-party\ImGui\include\IMGUI\imgui_widgets.cpp">
+            <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+            <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+            <Optimization>Disabled</Optimization>
+            <SupportJustMyCode>true</SupportJustMyCode>
+            <AssemblerOutput>NoListing</AssemblerOutput>
+            <AssemblerListingLocation>Procedur.6E736726\x64\Debug\</AssemblerListingLocation>
+            <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+            <BrowseInformation>false</BrowseInformation>
+            <BrowseInformationFile>Procedur.6E736726\x64\Debug\</BrowseInformationFile>
+            <CompileAs>Default</CompileAs>
+            <UseDynamicDebugging>false</UseDynamicDebugging>
+            <ConformanceMode>true</ConformanceMode>
+            <DiagnosticsFormat>Column</DiagnosticsFormat>
+            <DisableLanguageExtensions>false</DisableLanguageExtensions>
+            <ErrorReporting>Prompt</ErrorReporting>
+            <ExpandAttributedSource>false</ExpandAttributedSource>
+            <ExceptionHandling>Sync</ExceptionHandling>
+            <EnableASAN>false</EnableASAN>
+            <EnableFuzzer>false</EnableFuzzer>
+            <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+            <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+            <EnableVectorLength>NotSet</EnableVectorLength>
+            <FloatingPointModel>Precise</FloatingPointModel>
+            <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+            <GenerateModuleDependencies>false</GenerateModuleDependencies>
+            <GenerateSourceDependencies>false</GenerateSourceDependencies>
+            <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+            <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+            <IntrinsicFunctions>false</IntrinsicFunctions>
+            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+            <LanguageStandard>stdcpp23</LanguageStandard>
+            <LanguageStandard_C>Default</LanguageStandard_C>
+            <MinimalRebuild>false</MinimalRebuild>
+            <ModuleDependenciesFile>Procedur.6E736726\x64\Debug\</ModuleDependenciesFile>
+            <ModuleOutputFile>Procedur.6E736726\x64\Debug\</ModuleOutputFile>
+            <OmitDefaultLibName>false</OmitDefaultLibName>
+            <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+            <WholeProgramOptimization>false</WholeProgramOptimization>
+            <ObjectFileName>Procedur.6E736726\x64\Debug\</ObjectFileName>
+            <CallingConvention>Cdecl</CallingConvention>
+            <ProgramDataBaseFileName>Procedur.6E736726\x64\Debug\vc143.pdb</ProgramDataBaseFileName>
+            <PrecompiledHeader>NotUsing</PrecompiledHeader>
+            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+            <PrecompiledHeaderOutputFile>Procedur.6E736726\x64\Debug\Procedural Audio Engine.pch</PrecompiledHeaderOutputFile>
+            <PreprocessToFile>false</PreprocessToFile>
+            <PreprocessKeepComments>false</PreprocessKeepComments>
+            <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+            <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+            <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+            <ShowIncludes>false</ShowIncludes>
+            <SourceDependenciesFile>Procedur.6E736726\x64\Debug\</SourceDependenciesFile>
+            <SuppressStartupBanner>true</SuppressStartupBanner>
+            <BufferSecurityCheck>true</BufferSecurityCheck>
+            <SmallerTypeCheck>false</SmallerTypeCheck>
+            <SpectreMitigation>false</SpectreMitigation>
+            <StructMemberAlignment>Default</StructMemberAlignment>
+            <TrackerLogDirectory>Procedur.6E736726\x64\Debug\Procedur.6E736726.tlog\</TrackerLogDirectory>
+            <TranslateIncludes>false</TranslateIncludes>
+            <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+            <TreatWarningAsError>false</TreatWarningAsError>
+            <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+            <UseFullPaths>true</UseFullPaths>
+            <WarningLevel>Level3</WarningLevel>
+            <XMLDocumentationFileName>Procedur.6E736726\x64\Debug\</XMLDocumentationFileName>
+            <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+            <IntelJCCErratum>false</IntelJCCErratum>
+            <BuildStlModules>false</BuildStlModules>
+            <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+            <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+            <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+            <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+            <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
+            <SDLCheck>true</SDLCheck>
+            <AdditionalIncludeDirectories>W:\Projects\Code\C++\Abertay\Year 4\CMP407 - Audio Programming\Assessment\Procedural Audio Engine\third-party/ImGui;W:\Projects\Code\C++\Abertay\Year 4\CMP407 - Audio Programming\Assessment\Procedural Audio Engine\third-party/ImGui/backend;</AdditionalIncludeDirectories>
+            <LinkCompiled>true</LinkCompiled>
+        </ClCompile>
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="assets\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ClInclude Include="src\core\Application.h"/>
+        <ClInclude Include="third-party\Eigen\src\AccelerateSupport\AccelerateSupport.h"/>
+        <ClInclude Include="third-party\Eigen\src\AccelerateSupport\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\Cholesky\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\Cholesky\LDLT.h"/>
+        <ClInclude Include="third-party\Eigen\src\Cholesky\LLT.h"/>
+        <ClInclude Include="third-party\Eigen\src\Cholesky\LLT_LAPACKE.h"/>
+        <ClInclude Include="third-party\Eigen\src\CholmodSupport\CholmodSupport.h"/>
+        <ClInclude Include="third-party\Eigen\src\CholmodSupport\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AltiVec\Complex.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AltiVec\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AltiVec\MatrixProduct.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AltiVec\MatrixProductCommon.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AltiVec\MatrixProductMMA.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AltiVec\MatrixProductMMAbfloat16.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AltiVec\MatrixVectorProduct.inc"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AltiVec\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AltiVec\TypeCasting.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\Complex.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\GemmKernel.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\MathFunctionsFP16.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\PacketMathFP16.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\Reductions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\TrsmKernel.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\TrsmUnrolls.inc"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\TypeCasting.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX512\TypeCastingFP16.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX\Complex.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX\Reductions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\AVX\TypeCasting.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\Default\BFloat16.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\Default\ConjHelper.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\Default\GenericPacketMathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\Default\GenericPacketMathFunctionsFwd.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\Default\Half.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\Default\Settings.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\GPU\Complex.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\GPU\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\GPU\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\GPU\Tuple.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\GPU\TypeCasting.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\HIP\hcc\math_constants.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\HVX\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\LSX\Complex.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\LSX\GeneralBlockPanelKernel.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\LSX\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\LSX\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\LSX\TypeCasting.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\MSA\Complex.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\MSA\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\MSA\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\NEON\Complex.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\NEON\GeneralBlockPanelKernel.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\NEON\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\NEON\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\NEON\TypeCasting.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\NEON\UnaryFunctors.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SSE\Complex.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SSE\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SSE\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SSE\Reductions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SSE\TypeCasting.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SVE\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SVE\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SVE\TypeCasting.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SYCL\InteropHeaders.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SYCL\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SYCL\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\SYCL\TypeCasting.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\ZVector\Complex.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\ZVector\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\arch\ZVector\PacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\ArithmeticSequence.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Array.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\ArrayBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\ArrayWrapper.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Assign.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\AssignEvaluator.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Assign_MKL.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\BandMatrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Block.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\CommaInitializer.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\ConditionEstimator.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\CoreEvaluators.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\CoreIterators.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\CwiseBinaryOp.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\CwiseNullaryOp.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\CwiseTernaryOp.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\CwiseUnaryOp.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\CwiseUnaryView.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\DenseBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\DenseCoeffsBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\DenseStorage.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\DeviceWrapper.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Diagonal.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\DiagonalMatrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\DiagonalProduct.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Dot.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\EigenBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Fill.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\FindCoeff.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\ForceAlignedAccess.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\functors\AssignmentFunctors.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\functors\BinaryFunctors.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\functors\NullaryFunctors.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\functors\StlFunctors.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\functors\TernaryFunctors.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\functors\UnaryFunctors.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Fuzzy.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\GeneralProduct.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\GenericPacketMath.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\GlobalFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\IndexedView.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\InnerProduct.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Inverse.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\IO.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Map.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\MapBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\MathFunctions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\MathFunctionsImpl.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Matrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\MatrixBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\NestByValue.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\NoAlias.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\NumTraits.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\PartialReduxEvaluator.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\PermutationMatrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\PlainObjectBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Product.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\ProductEvaluators.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\GeneralBlockPanelKernel.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\GeneralMatrixMatrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\GeneralMatrixMatrixTriangular.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\GeneralMatrixMatrixTriangular_BLAS.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\GeneralMatrixMatrix_BLAS.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\GeneralMatrixVector.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\GeneralMatrixVector_BLAS.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\Parallelizer.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\SelfadjointMatrixMatrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\SelfadjointMatrixMatrix_BLAS.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\SelfadjointMatrixVector.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\SelfadjointMatrixVector_BLAS.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\SelfadjointProduct.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\SelfadjointRank2Update.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\TriangularMatrixMatrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\TriangularMatrixMatrix_BLAS.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\TriangularMatrixVector.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\TriangularMatrixVector_BLAS.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\TriangularSolverMatrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\TriangularSolverMatrix_BLAS.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\products\TriangularSolverVector.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Random.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\RandomImpl.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\RealView.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Redux.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Ref.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Replicate.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Reshaped.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\ReturnByValue.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Reverse.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Select.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\SelfAdjointView.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\SelfCwiseBinaryOp.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\SkewSymmetricMatrix3.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Solve.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\SolverBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\SolveTriangular.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\StableNorm.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\StlIterators.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Stride.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Swap.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Transpose.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Transpositions.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\TriangularMatrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\Assert.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\BlasUtil.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\ConfigureVectorization.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\Constants.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\DisableStupidWarnings.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\EmulateArray.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\ForwardDeclarations.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\GpuHipCudaDefines.inc"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\GpuHipCudaUndefines.inc"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\IndexedViewHelper.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\IntegralConstant.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\Macros.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\MaxSizeVector.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\Memory.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\Meta.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\MKL_support.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\MoreMeta.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\ReenableStupidWarnings.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\ReshapedHelper.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\Serializer.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\StaticAssert.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\SymbolicIndex.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\util\XprHelper.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\VectorBlock.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\VectorwiseOp.h"/>
+        <ClInclude Include="third-party\Eigen\src\Core\Visitor.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\ComplexEigenSolver.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\ComplexSchur.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\ComplexSchur_LAPACKE.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\EigenSolver.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\GeneralizedEigenSolver.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\GeneralizedSelfAdjointEigenSolver.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\HessenbergDecomposition.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\MatrixBaseEigenvalues.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\RealQZ.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\RealSchur.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\RealSchur_LAPACKE.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\SelfAdjointEigenSolver.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\SelfAdjointEigenSolver_LAPACKE.h"/>
+        <ClInclude Include="third-party\Eigen\src\Eigenvalues\Tridiagonalization.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\AlignedBox.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\AngleAxis.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\arch\Geometry_SIMD.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\EulerAngles.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\Homogeneous.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\Hyperplane.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\OrthoMethods.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\ParametrizedLine.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\Quaternion.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\Rotation2D.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\RotationBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\Scaling.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\Transform.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\Translation.h"/>
+        <ClInclude Include="third-party\Eigen\src\Geometry\Umeyama.h"/>
+        <ClInclude Include="third-party\Eigen\src\Householder\BlockHouseholder.h"/>
+        <ClInclude Include="third-party\Eigen\src\Householder\Householder.h"/>
+        <ClInclude Include="third-party\Eigen\src\Householder\HouseholderSequence.h"/>
+        <ClInclude Include="third-party\Eigen\src\Householder\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\IterativeLinearSolvers\BasicPreconditioners.h"/>
+        <ClInclude Include="third-party\Eigen\src\IterativeLinearSolvers\BiCGSTAB.h"/>
+        <ClInclude Include="third-party\Eigen\src\IterativeLinearSolvers\ConjugateGradient.h"/>
+        <ClInclude Include="third-party\Eigen\src\IterativeLinearSolvers\IncompleteCholesky.h"/>
+        <ClInclude Include="third-party\Eigen\src\IterativeLinearSolvers\IncompleteLUT.h"/>
+        <ClInclude Include="third-party\Eigen\src\IterativeLinearSolvers\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\IterativeLinearSolvers\IterativeSolverBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\IterativeLinearSolvers\LeastSquareConjugateGradient.h"/>
+        <ClInclude Include="third-party\Eigen\src\IterativeLinearSolvers\SolveWithGuess.h"/>
+        <ClInclude Include="third-party\Eigen\src\Jacobi\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\Jacobi\Jacobi.h"/>
+        <ClInclude Include="third-party\Eigen\src\KLUSupport\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\KLUSupport\KLUSupport.h"/>
+        <ClInclude Include="third-party\Eigen\src\LU\arch\InverseSize4.h"/>
+        <ClInclude Include="third-party\Eigen\src\LU\Determinant.h"/>
+        <ClInclude Include="third-party\Eigen\src\LU\FullPivLU.h"/>
+        <ClInclude Include="third-party\Eigen\src\LU\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\LU\InverseImpl.h"/>
+        <ClInclude Include="third-party\Eigen\src\LU\PartialPivLU.h"/>
+        <ClInclude Include="third-party\Eigen\src\LU\PartialPivLU_LAPACKE.h"/>
+        <ClInclude Include="third-party\Eigen\src\MetisSupport\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\MetisSupport\MetisSupport.h"/>
+        <ClInclude Include="third-party\Eigen\src\misc\blas.h"/>
+        <ClInclude Include="third-party\Eigen\src\misc\Image.h"/>
+        <ClInclude Include="third-party\Eigen\src\misc\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\misc\Kernel.h"/>
+        <ClInclude Include="third-party\Eigen\src\misc\lapacke.h"/>
+        <ClInclude Include="third-party\Eigen\src\misc\lapacke_helpers.h"/>
+        <ClInclude Include="third-party\Eigen\src\misc\lapacke_mangling.h"/>
+        <ClInclude Include="third-party\Eigen\src\misc\RealSvd2x2.h"/>
+        <ClInclude Include="third-party\Eigen\src\OrderingMethods\Amd.h"/>
+        <ClInclude Include="third-party\Eigen\src\OrderingMethods\Eigen_Colamd.h"/>
+        <ClInclude Include="third-party\Eigen\src\OrderingMethods\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\OrderingMethods\Ordering.h"/>
+        <ClInclude Include="third-party\Eigen\src\PardisoSupport\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\PardisoSupport\PardisoSupport.h"/>
+        <ClInclude Include="third-party\Eigen\src\PaStiXSupport\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\PaStiXSupport\PaStiXSupport.h"/>
+        <ClInclude Include="third-party\Eigen\src\plugins\ArrayCwiseBinaryOps.inc"/>
+        <ClInclude Include="third-party\Eigen\src\plugins\ArrayCwiseUnaryOps.inc"/>
+        <ClInclude Include="third-party\Eigen\src\plugins\BlockMethods.inc"/>
+        <ClInclude Include="third-party\Eigen\src\plugins\CommonCwiseBinaryOps.inc"/>
+        <ClInclude Include="third-party\Eigen\src\plugins\CommonCwiseUnaryOps.inc"/>
+        <ClInclude Include="third-party\Eigen\src\plugins\IndexedViewMethods.inc"/>
+        <ClInclude Include="third-party\Eigen\src\plugins\InternalHeaderCheck.inc"/>
+        <ClInclude Include="third-party\Eigen\src\plugins\MatrixCwiseBinaryOps.inc"/>
+        <ClInclude Include="third-party\Eigen\src\plugins\MatrixCwiseUnaryOps.inc"/>
+        <ClInclude Include="third-party\Eigen\src\plugins\ReshapedMethods.inc"/>
+        <ClInclude Include="third-party\Eigen\src\QR\ColPivHouseholderQR.h"/>
+        <ClInclude Include="third-party\Eigen\src\QR\ColPivHouseholderQR_LAPACKE.h"/>
+        <ClInclude Include="third-party\Eigen\src\QR\CompleteOrthogonalDecomposition.h"/>
+        <ClInclude Include="third-party\Eigen\src\QR\FullPivHouseholderQR.h"/>
+        <ClInclude Include="third-party\Eigen\src\QR\HouseholderQR.h"/>
+        <ClInclude Include="third-party\Eigen\src\QR\HouseholderQR_LAPACKE.h"/>
+        <ClInclude Include="third-party\Eigen\src\QR\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCholesky\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCholesky\SimplicialCholesky.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCholesky\SimplicialCholesky_impl.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\AmbiVector.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\CompressedStorage.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\ConservativeSparseSparseProduct.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseAssign.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseBlock.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseColEtree.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseCompressedBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseCwiseBinaryOp.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseCwiseUnaryOp.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseDenseProduct.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseDiagonalProduct.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseDot.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseFuzzy.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseMap.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseMatrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseMatrixBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparsePermutation.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseProduct.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseRedux.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseRef.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseSelfAdjointView.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseSolverBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseSparseProductWithPruning.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseTranspose.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseTriangularView.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseUtil.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseVector.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\SparseView.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseCore\TriangularSolver.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLUImpl.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_column_bmod.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_column_dfs.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_copy_to_ucol.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_heap_relax_snode.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_kernel_bmod.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_Memory.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_panel_bmod.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_panel_dfs.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_pivotL.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_pruneL.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_relax_snode.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_Structs.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_SupernodalMatrix.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseLU\SparseLU_Utils.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseQR\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\SparseQR\SparseQR.h"/>
+        <ClInclude Include="third-party\Eigen\src\SPQRSupport\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\SPQRSupport\SuiteSparseQRSupport.h"/>
+        <ClInclude Include="third-party\Eigen\src\StlSupport\details.h"/>
+        <ClInclude Include="third-party\Eigen\src\StlSupport\StdDeque.h"/>
+        <ClInclude Include="third-party\Eigen\src\StlSupport\StdList.h"/>
+        <ClInclude Include="third-party\Eigen\src\StlSupport\StdVector.h"/>
+        <ClInclude Include="third-party\Eigen\src\SuperLUSupport\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\SuperLUSupport\SuperLUSupport.h"/>
+        <ClInclude Include="third-party\Eigen\src\SVD\BDCSVD.h"/>
+        <ClInclude Include="third-party\Eigen\src\SVD\BDCSVD_LAPACKE.h"/>
+        <ClInclude Include="third-party\Eigen\src\SVD\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\SVD\JacobiSVD.h"/>
+        <ClInclude Include="third-party\Eigen\src\SVD\JacobiSVD_LAPACKE.h"/>
+        <ClInclude Include="third-party\Eigen\src\SVD\SVDBase.h"/>
+        <ClInclude Include="third-party\Eigen\src\SVD\UpperBidiagonalization.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\Barrier.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\CoreThreadPoolDevice.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\EventCount.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\ForkJoin.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\NonBlockingThreadPool.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\RunQueue.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\ThreadCancel.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\ThreadEnvironment.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\ThreadLocal.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\ThreadPoolInterface.h"/>
+        <ClInclude Include="third-party\Eigen\src\ThreadPool\ThreadYield.h"/>
+        <ClInclude Include="third-party\Eigen\src\UmfPackSupport\InternalHeaderCheck.h"/>
+        <ClInclude Include="third-party\Eigen\src\UmfPackSupport\UmfPackSupport.h"/>
+        <ClInclude Include="third-party\Glad\include\GLAD\glad.h"/>
+        <ClInclude Include="third-party\Glad\include\KHR\khrplatform.h"/>
+        <ClInclude Include="third-party\GLFW\include\GLFW\glfw3.h"/>
+        <ClInclude Include="third-party\GLFW\include\GLFW\glfw3native.h"/>
+        <ClInclude Include="third-party\ImGui\include\IMGUI\backend\imgui_impl_glfw.h"/>
+        <ClInclude Include="third-party\ImGui\include\IMGUI\backend\imgui_impl_opengl3.h"/>
+        <ClInclude Include="third-party\ImGui\include\IMGUI\backend\imgui_impl_opengl3_loader.h"/>
+        <ClInclude Include="third-party\ImGui\include\IMGUI\imconfig.h"/>
+        <ClInclude Include="third-party\ImGui\include\IMGUI\imgui.h"/>
+        <ClInclude Include="third-party\ImGui\include\IMGUI\imgui_internal.h"/>
+        <ClInclude Include="third-party\ImGui\include\IMGUI\imstb_rectpack.h"/>
+        <ClInclude Include="third-party\ImGui\include\IMGUI\imstb_textedit.h"/>
+        <ClInclude Include="third-party\ImGui\include\IMGUI\imstb_truetype.h"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="imgui.ini"/>
+        <Content Include="third-party\Eigen\AccelerateSupport"/>
+        <Content Include="third-party\Eigen\Cholesky"/>
+        <Content Include="third-party\Eigen\CholmodSupport"/>
+        <Content Include="third-party\Eigen\Core"/>
+        <Content Include="third-party\Eigen\Dense"/>
+        <Content Include="third-party\Eigen\Eigen"/>
+        <Content Include="third-party\Eigen\Eigenvalues"/>
+        <Content Include="third-party\Eigen\Geometry"/>
+        <Content Include="third-party\Eigen\Householder"/>
+        <Content Include="third-party\Eigen\IterativeLinearSolvers"/>
+        <Content Include="third-party\Eigen\Jacobi"/>
+        <Content Include="third-party\Eigen\KLUSupport"/>
+        <Content Include="third-party\Eigen\LU"/>
+        <Content Include="third-party\Eigen\MetisSupport"/>
+        <Content Include="third-party\Eigen\OrderingMethods"/>
+        <Content Include="third-party\Eigen\PardisoSupport"/>
+        <Content Include="third-party\Eigen\PaStiXSupport"/>
+        <Content Include="third-party\Eigen\QR"/>
+        <Content Include="third-party\Eigen\QtAlignedMalloc"/>
+        <Content Include="third-party\Eigen\Sparse"/>
+        <Content Include="third-party\Eigen\SparseCholesky"/>
+        <Content Include="third-party\Eigen\SparseCore"/>
+        <Content Include="third-party\Eigen\SparseLU"/>
+        <Content Include="third-party\Eigen\SparseQR"/>
+        <Content Include="third-party\Eigen\SPQRSupport"/>
+        <Content Include="third-party\Eigen\StdDeque"/>
+        <Content Include="third-party\Eigen\StdList"/>
+        <Content Include="third-party\Eigen\StdVector"/>
+        <Content Include="third-party\Eigen\SuperLUSupport"/>
+        <Content Include="third-party\Eigen\SVD"/>
+        <Content Include="third-party\Eigen\ThreadPool"/>
+        <Content Include="third-party\Eigen\UmfPackSupport"/>
+        <Content Include="third-party\Eigen\Version"/>
+        <Content Include="third-party\GLFW\lib-vc2022\glfw3.lib"/>
+    </ItemGroup>
+    <PropertyGroup Label="Globals">
+        <VCProjectVersion>15.0</VCProjectVersion>
+        <ProjectGuid>{6E736726-1F9D-40B1-8F35-426DF8E2C726}</ProjectGuid>
+        <Keyword>Win32Proj</Keyword>
+        <RootNamespace>Procedural_Audio_Engine</RootNamespace>
+        <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    </PropertyGroup>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+    <PropertyGroup>
+        <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+        <ConfigurationType>Application</ConfigurationType>
+        <UseDebugLibraries>true</UseDebugLibraries>
+        <PlatformToolset>v143</PlatformToolset>
+        <CharacterSet>Unicode</CharacterSet>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+        <ConfigurationType>Application</ConfigurationType>
+        <UseDebugLibraries>false</UseDebugLibraries>
+        <PlatformToolset>v143</PlatformToolset>
+        <WholeProgramOptimization>true</WholeProgramOptimization>
+        <CharacterSet>Unicode</CharacterSet>
+    </PropertyGroup>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+    <ImportGroup Label="ExtensionSettings">
+    </ImportGroup>
+    <ImportGroup Label="Shared">
+    </ImportGroup>
+    <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
+    </ImportGroup>
+    <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
+    </ImportGroup>
+    <PropertyGroup Label="UserMacros"/>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+        <LinkIncremental>true</LinkIncremental>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+        <LinkIncremental>false</LinkIncremental>
+    </PropertyGroup>
+    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+        <ClCompile>
+            <PrecompiledHeader>NotUsing</PrecompiledHeader>
+            <WarningLevel>Level3</WarningLevel>
+            <Optimization>Disabled</Optimization>
+            <SDLCheck>true</SDLCheck>
+            <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+            <ConformanceMode>true</ConformanceMode>
+            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+            <LanguageStandard>stdcpp23</LanguageStandard>
+            <AdditionalIncludeDirectories>$(ProjectDir)third-party/ImGui/include;$(ProjectDir)third-party/GLFW/include;$(ProjectDir)third-party/Glad/include;$(ProjectDir)third-party/Eigen;</AdditionalIncludeDirectories>
+        </ClCompile>
+        <Link>
+            <SubSystem>Console</SubSystem>
+            <GenerateDebugInformation>true</GenerateDebugInformation>
+            <AdditionalLibraryDirectories>$(ProjectDir)third-party/GLFW/lib-vc2022</AdditionalLibraryDirectories>
+            <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glfw3.lib</AdditionalDependencies>
+        </Link>
+    </ItemDefinitionGroup>
+    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+        <ClCompile>
+            <PrecompiledHeader>NotUsing</PrecompiledHeader>
+            <WarningLevel>Level3</WarningLevel>
+            <Optimization>MaxSpeed</Optimization>
+            <FunctionLevelLinking>true</FunctionLevelLinking>
+            <IntrinsicFunctions>true</IntrinsicFunctions>
+            <SDLCheck>true</SDLCheck>
+            <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+            <ConformanceMode>true</ConformanceMode>
+            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+            <LanguageStandard>stdcpp23</LanguageStandard>
+        </ClCompile>
+        <Link>
+            <SubSystem>Console</SubSystem>
+            <EnableCOMDATFolding>true</EnableCOMDATFolding>
+            <OptimizeReferences>true</OptimizeReferences>
+            <GenerateDebugInformation>true</GenerateDebugInformation>
+        </Link>
+    </ItemDefinitionGroup>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+    <ImportGroup Label="ExtensionTargets">
+    </ImportGroup>
 </Project>
