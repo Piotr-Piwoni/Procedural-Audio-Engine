@@ -1,11 +1,13 @@
 ﻿#pragma once
 #include "GLFW/glfw3.h"
-#include "IMGUI/imgui.h"
 
+namespace MT
+{
 class Application
 {
 public:
-	Application(GLFWwindow* win) : m_Window(win)
+	Application(GLFWwindow* win) :
+		m_Window(win)
 	{
 		glfwSetWindowUserPointer(m_Window, this);
 		glfwSetKeyCallback(m_Window, KeyCallback);
@@ -30,3 +32,4 @@ private:
 private:
 	GLFWwindow* m_Window;
 };
+}
