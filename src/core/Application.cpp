@@ -1,9 +1,18 @@
 ﻿#include "Application.hpp"
 
+
 #include "IMGUI/imgui.h"
 
 
-void MT::Application::Update() {}
+MT::Application::Application(GLFWwindow* win) :
+	m_Window(win)
+{
+	glfwSetWindowUserPointer(m_Window, this);
+	glfwSetKeyCallback(m_Window, KeyCallback);
+}
+
+void MT::Application::Update()
+{}
 
 void MT::Application::Render()
 {

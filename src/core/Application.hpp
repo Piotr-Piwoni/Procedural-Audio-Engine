@@ -6,12 +6,7 @@ namespace MT
 class Application
 {
 public:
-	Application(GLFWwindow* win) :
-		m_Window(win)
-	{
-		glfwSetWindowUserPointer(m_Window, this);
-		glfwSetKeyCallback(m_Window, KeyCallback);
-	}
+	Application(GLFWwindow* win);
 
 	void Update();
 	void Render();
