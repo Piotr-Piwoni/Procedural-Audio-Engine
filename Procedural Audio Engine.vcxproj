@@ -12,6 +12,7 @@
     </ItemGroup>
     <ItemGroup>
         <ClCompile Include="src\core\Application.cpp"/>
+        <ClCompile Include="src\core\AudioBackend.cpp"/>
         <ClCompile Include="src\main.cpp"/>
         <ClCompile Include="third-party\Glad\src\glad.c"/>
         <ClCompile Include="third-party\ImGui\include\IMGUI\backend\imgui_impl_glfw.cpp"/>
@@ -26,6 +27,8 @@
     </ItemGroup>
     <ItemGroup>
         <ClInclude Include="src\core\Application.hpp"/>
+        <ClInclude Include="src\core\AudioBackend.hpp"/>
+        <ClInclude Include="src\core\BackendErrorType.hpp"/>
         <ClInclude Include="src\core\ImGuiLayer.hpp"/>
         <ClInclude Include="src\core\Window.hpp"/>
         <ClInclude Include="src\Utilities\Utils.hpp"/>

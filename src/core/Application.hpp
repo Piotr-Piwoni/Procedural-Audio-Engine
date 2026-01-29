@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "AudioBackend.hpp"
 #include "GLFW/glfw3.h"
 
 namespace MT
@@ -6,7 +7,7 @@ namespace MT
 class Application
 {
 public:
-	Application(GLFWwindow* win);
+	Application(GLFWwindow* win, Core::AudioBackend* backend);
 
 	void Update();
 	void Render();
@@ -25,6 +26,7 @@ private:
 	}
 
 private:
-	GLFWwindow* m_Window;
+	GLFWwindow* m_Window{nullptr};
+	Core::AudioBackend* m_Backend{nullptr};
 };
 }
