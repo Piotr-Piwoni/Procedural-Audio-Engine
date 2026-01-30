@@ -28,5 +28,8 @@ private:
 private:
 	GLFWwindow* m_Window{nullptr};
 	Core::Audio::AudioBackend* m_Backend{nullptr};
+
+	float m_MasterVolume{1.f};
+	int m_MasterVolumeDB{0};
 };
 }
