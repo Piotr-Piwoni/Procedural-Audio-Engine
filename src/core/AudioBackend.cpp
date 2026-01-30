@@ -3,21 +3,22 @@
 #include <iostream>
 #include <print>
 
-
+namespace MT::Core::Audio
+{
 /**
- * @brief Creates and initialises the WASAPI audio backend.
+ * @brief Creates and initializes the WASAPI audio backend.
  *
- * This function initialises COM for the current thread, enumerates the default
+ * This function initializes COM for the current thread, enumerates the default
  * audio output device, activates an IAudioClient, retrieves the system mix
  * format, and acquires an IAudioRenderClient for audio playback.
  *
- * On failure, any partially initialised resources are released and an
+ * On failure, any partially initialized resources are released and an
  * appropriate BackendError is returned.
  *
- * @param comInitMode COM initialisation mode (e.g. COINIT_MULTITHREADED).
+ * @param comInitMode COM initialization mode (e.g. COINIT_MULTITHREADED).
  * @return BackendError::NONE on success, otherwise a specific error code.
  */
-MT::Core::BackendError MT::Core::AudioBackend::Create(const DWORD comInitMode)
+BackendError AudioBackend::Create(const DWORD comInitMode)
 {
 	// Initialize the COM library for the calling thread.
 	HRESULT result = CoInitializeEx(nullptr, comInitMode);
@@ -102,7 +103,7 @@ MT::Core::BackendError MT::Core::AudioBackend::Create(const DWORD comInitMode)
  * COM for the current thread. After calling this function, the backend is no
  * longer usable.
  */
-void MT::Core::AudioBackend::Shutdown() const
+void AudioBackend::Shutdown() const
 {
 	if (m_RenderClient)
 		m_RenderClient->Release();
@@ -124,8 +125,14 @@ void MT::Core::AudioBackend::Shutdown() const
  * Retrieves the size of the audio buffer in frames and begins streaming audio
  * to the output device.
  */
-void MT::Core::AudioBackend::StartPlayback()
+void AudioBackend::StartPlayback()
 {
+	if (!m_AudioClient)
+	{
+		std::cerr << "Audio client is uninitialized!\n";
+		return;
+	}
+
 	if (FAILED(m_AudioClient->GetBufferSize(&m_BufferFrameCount)))
 	{
 		std::cerr << "Failed to get buffer size!\n";
@@ -134,6 +141,84 @@ void MT::Core::AudioBackend::StartPlayback()
 
 	if (FAILED(m_AudioClient->Start()))
 		std::cerr << "Failed to start playback!\n";
+
+	m_State = PlaybackState::PLAYING;
+}
+
+/**
+ * @brief Stops audio playback.
+ *
+ * Pauses the current playback and flushes the buffer, resetting stream
+ * position to zero.
+ */
+void AudioBackend::StopPlayback()
+{
+	if (!m_AudioClient)
+	{
+		std::cerr << "Audio client is uninitialized!\n";
+		return;
+	}
+
+	if (FAILED(m_AudioClient->Stop()))
+		std::cerr << "Failed to pause playback!\n";
+
+	if (FAILED(m_AudioClient->Reset()))
+		std::cerr << "Failed to flush buffer!\n";
+
+	m_State = PlaybackState::STOPPED;
+}
+
+/**
+ * @brief Pauses audio playback.
+ *
+ * Pauses the current playback, the buffer isn't flushed.
+ */
+void AudioBackend::PausePlayback()
+{
+	if (!m_AudioClient)
+	{
+		std::cerr << "Audio client is uninitialized!\n";
+		return;
+	}
+
+	if (FAILED(m_AudioClient->Stop()))
+		std::cerr << "Failed to pause playback!\n";
+
+	m_State = PlaybackState::PAUSED;
+}
+
+/**
+ * @brief Resume audio playback.
+ *
+ * Starts the playback from the current buffer position.
+ */
+void AudioBackend::ResumePlayback()
+{
+	if (!m_AudioClient)
+	{
+		std::cerr << "Audio client is uninitialized!\n";
+		return;
+	}
+
+	if (FAILED(m_AudioClient->Start()))
+		std::cerr << "Failed to resume playback!\n";
+
+	m_State = PlaybackState::PLAYING;
+}
+
+/**
+ * @brief Retrieves the current playback state of the audio backend.
+ *
+ * The playback state represents the current lifecycle of the audio stream:
+ * - PlaybackState::Stopped: The audio client is not running and the stream position is reset.
+ * - PlaybackState::Playing: The audio client is actively rendering audio.
+ * - PlaybackState::Paused: The audio client is stopped but retains its buffered audio data.
+ *
+ * @return The current PlaybackState value.
+ */
+PlaybackState AudioBackend::GetPlaybackState() const
+{
+	return m_State;
 }
 
 /**
@@ -142,7 +227,7 @@ void MT::Core::AudioBackend::StartPlayback()
  * @return Pointer to a constant WAVEFORMATEX structure describing the audio
  *         format, or nullptr if the format is uninitialised.
  */
-const WAVEFORMATEX* MT::Core::AudioBackend::GetFormat() const
+const WAVEFORMATEX* AudioBackend::GetFormat() const
 {
 	if (!m_MixFormat)
 	{
@@ -162,7 +247,7 @@ const WAVEFORMATEX* MT::Core::AudioBackend::GetFormat() const
  * @return AudioBuffer containing the sample pointer and frame count, or an
  *         empty AudioBuffer on failure.
  */
-MT::Core::AudioBuffer MT::Core::AudioBackend::GetBuffer() const
+AudioBuffer AudioBackend::GetBuffer() const
 {
 	if (!m_RenderClient)
 	{
@@ -193,7 +278,7 @@ MT::Core::AudioBuffer MT::Core::AudioBackend::GetBuffer() const
  *
  * @param buffer Number of frames that were written to the buffer.
  */
-void MT::Core::AudioBackend::ReleaseBuffer(const uint32_t buffer) const
+void AudioBackend::ReleaseBuffer(const uint32_t buffer) const
 {
 	if (!m_RenderClient)
 	{
@@ -215,8 +300,7 @@ void MT::Core::AudioBackend::ReleaseBuffer(const uint32_t buffer) const
  * @return An expected containing the number of writable frames, or an error
  *         message if the query fails.
  */
-std::expected<uint32_t, std::string>
-MT::Core::AudioBackend::GetFramesAvailable() const
+std::expected<uint32_t, std::string> AudioBackend::GetFramesAvailable() const
 {
 	if (!m_AudioClient)
 		return std::unexpected<std::string>("Audio client is uninitialized!");
@@ -229,4 +313,6 @@ MT::Core::AudioBackend::GetFramesAvailable() const
 				"Failed to retrieve the current padding.");
 
 	return m_BufferFrameCount - padding;
+}
+
 }

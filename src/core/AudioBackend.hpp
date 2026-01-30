@@ -6,9 +6,9 @@
 #include <stdint.h>
 #include <string>
 
-#include "BackendErrorType.hpp"
+#include "AudioTypes.hpp"
 
-namespace MT::Core
+namespace MT::Core::Audio
 {
 struct AudioBuffer
 {
@@ -25,6 +25,11 @@ public:
 	void Shutdown() const;
 
 	void StartPlayback();
+	void StopPlayback();
+	void PausePlayback();
+	void ResumePlayback();
+
+	PlaybackState GetPlaybackState() const;
 
 	[[nodiscard]] const WAVEFORMATEX* GetFormat() const;
 	[[nodiscard]] AudioBuffer GetBuffer() const;
@@ -41,5 +46,6 @@ private:
 	IAudioRenderClient* m_RenderClient{nullptr};
 
 	uint32_t m_BufferFrameCount{0};
+	PlaybackState m_State{PlaybackState::STOPPED};
 };
 }

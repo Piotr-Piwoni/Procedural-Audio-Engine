@@ -1,8 +1,9 @@
 ﻿#pragma once
+#include <cstdint>
 
-namespace MT::Core
+namespace MT::Core::Audio
 {
-enum class BackendError : std::uint8_t
+enum class BackendError : uint8_t
 {
 	NONE          = 0,
 	COM_INIT      = 1,
@@ -34,6 +35,28 @@ inline const char* to_string(const BackendError e)
 		return "CLIENT_INIT";
 	case BackendError::RENDER_CLIENT:
 		return "RENDER_CLIENT";
+	default:
+		return "unknown";
+	}
+}
+
+enum class PlaybackState : uint8_t
+{
+	STOPPED,
+	PLAYING,
+	PAUSED
+};
+
+inline const char* to_string(const PlaybackState e)
+{
+	switch (e)
+	{
+	case PlaybackState::STOPPED:
+		return "STOPPED";
+	case PlaybackState::PLAYING:
+		return "PLAYING";
+	case PlaybackState::PAUSED:
+		return "PAUSED";
 	default:
 		return "unknown";
 	}

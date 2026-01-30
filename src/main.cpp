@@ -1,12 +1,6 @@
-#include <Audioclient.h>
-#include <Windows.h>
-#include <iostream>
-#include <mmdeviceapi.h>
 #include <print>
-#include <random>
-#include <thread>
 
-#include "core/Application.hpp"
+#include "Application.hpp"
 #include "core/AudioBackend.hpp"
 #include "core/ImGuiLayer.hpp"
 #include "core/Window.hpp"
@@ -19,10 +13,11 @@ int main()
 		return EXIT_FAILURE;
 
 
-	MT::Core::AudioBackend backend;
-	const MT::Core::BackendError result = backend.Create(COINIT_MULTITHREADED);
+	MT::Core::Audio::AudioBackend backend;
+	const MT::Core::Audio::BackendError result = backend.Create(
+			COINIT_MULTITHREADED);
 
-	if (result != MT::Core::BackendError::NONE)
+	if (result != MT::Core::Audio::BackendError::NONE)
 	{
 		std::println("Audio backend failed to be created, the reason {} error!",
 					 to_string(result));
