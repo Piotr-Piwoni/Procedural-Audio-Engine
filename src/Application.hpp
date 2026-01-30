@@ -1,6 +1,9 @@
 ﻿#pragma once
+#include <vector>
+
 #include "GLFW/glfw3.h"
-#include "core/AudioBackend.hpp"
+#include "core/audio/AudioBackend.hpp"
+#include "core/audio/Sound.h"
 
 namespace MT
 {
@@ -30,6 +33,8 @@ private:
 	Core::Audio::AudioBackend* m_Backend{nullptr};
 
 	float m_MasterVolume{1.f};
-	int m_MasterVolumeDB{0};
+	std::vector<Core::Audio::Sound> m_Sounds{};
+	/*int m_NoiseDB1{0};
+	int m_NoiseDB2{0};*/
 };
 }

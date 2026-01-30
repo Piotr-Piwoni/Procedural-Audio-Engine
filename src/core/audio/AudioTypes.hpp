@@ -42,9 +42,9 @@ inline const char* to_string(const BackendError e)
 
 enum class PlaybackState : uint8_t
 {
-	STOPPED,
-	PLAYING,
-	PAUSED
+	STOPPED = 0,
+	PLAYING = 1,
+	PAUSED  = 2
 };
 
 inline const char* to_string(const PlaybackState e)
