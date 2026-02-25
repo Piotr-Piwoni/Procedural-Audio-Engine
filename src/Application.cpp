@@ -9,7 +9,6 @@
 
 using namespace MT::Core::Audio;
 
-
 MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 	m_Window(win), m_Backend{backend}
 {
@@ -18,12 +17,6 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 
 	m_Sounds.reserve(16);
 	m_BaseFrequencies.reserve(16);
-
-	for (int i = 0; i < 2; i++)
-		m_Sounds.emplace_back(0.25f, m_Backend->GetFormat()->nSamplesPerSec);
-
-	for (auto& sound : m_Sounds)
-		m_BaseFrequencies.insert_or_assign(&sound, sound.GetFrequency());
 }
 
 void MT::Application::Update()
@@ -75,6 +68,22 @@ void MT::Application::Render()
 	for (size_t i = 0; i < m_Sounds.size(); i++)
 		RenderSoundSettings(m_Sounds[i], i);
 
+	// Buttons for adding and removing sounds.
+	constexpr ImVec2 buttonSize = {200.f, 25.f};
+	if (ImGui::Button("Add Sound", buttonSize))
+	{
+		auto& sound = m_Sounds.emplace_back(
+				0.25f, m_Backend->GetFormat()->nSamplesPerSec);
+		m_BaseFrequencies.insert_or_assign(&sound, sound.GetFrequency());
+	}
+
+	if (!m_Sounds.empty() && ImGui::Button("Remove Sound", buttonSize))
+	{
+		auto& sound = m_Sounds.back();
+		m_BaseFrequencies.erase(&sound);
+		m_Sounds.pop_back();
+	}
+
 	ImGui::End();
 }
 
@@ -89,21 +98,26 @@ void MT::Application::OnKey(const int key, int scancode,
 	// Close application when the Escape key is pressed.
 	if (key == GLFW_KEY_ESCAPE)
 		glfwSetWindowShouldClose(m_Window, true);
-	if (key == GLFW_KEY_P)
+
+	// If there are sounds, allow playback controls.
+	if (!m_Sounds.empty())
 	{
-		const auto state = m_Backend->GetPlaybackState();
-		if (state == PlaybackState::PLAYING)
-			m_Backend->PausePlayback();
-		else if (state == PlaybackState::PAUSED)
-			m_Backend->ResumePlayback();
-	}
-	if (key == GLFW_KEY_K)
-	{
-		const auto state = m_Backend->GetPlaybackState();
-		if (state == PlaybackState::PLAYING)
-			m_Backend->StopPlayback();
-		else if (state == PlaybackState::STOPPED)
-			m_Backend->StartPlayback();
+		if (key == GLFW_KEY_P)
+		{
+			const auto state = m_Backend->GetPlaybackState();
+			if (state == PlaybackState::PLAYING)
+				m_Backend->PausePlayback();
+			else if (state == PlaybackState::PAUSED)
+				m_Backend->ResumePlayback();
+		}
+		if (key == GLFW_KEY_K)
+		{
+			const auto state = m_Backend->GetPlaybackState();
+			if (state == PlaybackState::PLAYING)
+				m_Backend->StopPlayback();
+			else if (state == PlaybackState::STOPPED)
+				m_Backend->StartPlayback();
+		}
 	}
 }
 
