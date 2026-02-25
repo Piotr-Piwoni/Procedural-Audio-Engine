@@ -1,4 +1,4 @@
-﻿#include "Sound.h"
+﻿#include "Sound.hpp"
 
 #include <algorithm>
 #include <random>
@@ -79,6 +79,7 @@ float Sound::GenerateSample()
 {
 	static std::mt19937 gen(std::random_device{}());
 	static std::uniform_real_distribution dist(-1.f, 1.0f);
+
 	return dist(gen);
 }
 }

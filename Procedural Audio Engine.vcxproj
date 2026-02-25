@@ -167,6 +167,7 @@
         </ClCompile>
         <ClCompile Include="src\core\audio\Sound.cpp"/>
         <ClCompile Include="src\main.cpp"/>
+        <ClCompile Include="src\ui\imgui-knobs.cpp"/>
         <ClCompile Include="third-party\Glad\src\glad.c"/>
         <ClCompile Include="third-party\ImGui\include\IMGUI\backend\imgui_impl_glfw.cpp"/>
         <ClCompile Include="third-party\ImGui\include\IMGUI\backend\imgui_impl_opengl3.cpp"/>
@@ -182,9 +183,11 @@
         <ClInclude Include="src\Application.hpp"/>
         <ClInclude Include="src\core\audio\AudioBackend.hpp"/>
         <ClInclude Include="src\core\audio\AudioTypes.hpp"/>
-        <ClInclude Include="src\core\audio\Sound.h"/>
+        <ClInclude Include="src\core\audio\Sound.hpp"/>
         <ClInclude Include="src\core\ImGuiLayer.hpp"/>
         <ClInclude Include="src\core\Window.hpp"/>
+        <ClInclude Include="src\ui\imgui-knobs.h"/>
+        <ClInclude Include="src\Utilities\ImGuiTypesWrapper.hpp"/>
         <ClInclude Include="src\Utilities\Utils.hpp"/>
         <ClInclude Include="third-party\Eigen\src\AccelerateSupport\AccelerateSupport.h"/>
         <ClInclude Include="third-party\Eigen\src\AccelerateSupport\InternalHeaderCheck.h"/>

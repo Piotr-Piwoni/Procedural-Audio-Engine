@@ -5,6 +5,7 @@
 #include <thread>
 
 #include "IMGUI/imgui.h"
+#include "ui/imgui-knobs.h"
 
 using namespace MT::Core::Audio;
 
@@ -15,8 +16,6 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 	glfwSetWindowUserPointer(m_Window, this);
 	glfwSetKeyCallback(m_Window, KeyCallback);
 
-	backend->StartPlayback();
-
 	m_Sounds.reserve(16);
 	m_Sounds.emplace_back(0.25f);
 	m_Sounds.emplace_back(0.25f);
@@ -24,6 +23,9 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 
 void MT::Application::Update()
 {
+	if (m_Backend->GetPlaybackState() != PlaybackState::PLAYING)
+		return;
+
 	const auto format = m_Backend->GetFormat();
 	if (!format)
 		return;
@@ -42,9 +44,10 @@ void MT::Application::Update()
 	for (uint32_t i = 0; i < frames; i++)
 	{
 		float mixedSample = 0.f;
-		for (auto sound : m_Sounds)
-			mixedSample += sound.GetBuffer();
-
+		for (size_t k = 0; k < m_Sounds.size(); k++)
+		{
+			mixedSample += m_Sounds[k].GetBuffer();
+		}
 		mixedSample *= m_MasterVolume;
 		mixedSample = std::clamp(mixedSample, -1.f, 1.f);
 
@@ -96,8 +99,13 @@ void MT::Application::Render()
 			float db = sound.GetDBLevel();
 			char dbLabel[32];
 			std::snprintf(dbLabel, sizeof(dbLabel), "dB Offset##%zu", i);
-			if (ImGui::DragFloat(dbLabel, &db, 1.f, INT_MIN, INT_MAX))
+			bool dbKnob = ImGuiKnobs::Knob(dbLabel, &db, -100.f, 100.f, 1.f,
+										   "%.1f dB", ImGuiKnobVariant_Tick,
+										   64.f);
+			if (dbKnob)
 				sound.SetDBLevel(db);
+
+
 		}
 	}
 	ImGui::End();

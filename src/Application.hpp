@@ -3,7 +3,7 @@
 
 #include "GLFW/glfw3.h"
 #include "core/audio/AudioBackend.hpp"
-#include "core/audio/Sound.h"
+#include "core/audio/Sound.hpp"
 
 namespace MT
 {
@@ -34,7 +34,5 @@ private:
 
 	float m_MasterVolume{1.f};
 	std::vector<Core::Audio::Sound> m_Sounds{};
-	/*int m_NoiseDB1{0};
-	int m_NoiseDB2{0};*/
 };
 }
