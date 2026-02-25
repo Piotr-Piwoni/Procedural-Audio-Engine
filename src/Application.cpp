@@ -17,8 +17,9 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 	glfwSetKeyCallback(m_Window, KeyCallback);
 
 	m_Sounds.reserve(16);
-	m_Sounds.emplace_back(0.25f);
-	m_Sounds.emplace_back(0.25f);
+
+	for (int i = 0; i < 2; i++)
+		m_Sounds.emplace_back(0.25f, m_Backend->GetFormat()->nSamplesPerSec);
 }
 
 void MT::Application::Update()

@@ -1,21 +1,37 @@
 ﻿#include "Sound.hpp"
 
 #include <algorithm>
+#include <cassert>
+#include <iostream>
+#include <numbers>
 #include <random>
 
 #include "../../Utilities/Utils.hpp"
 
 namespace MT::Core::Audio
 {
-Sound::Sound(const float volume)
-{
-	SetVolume(volume);
-}
 
+Sound::Sound(const float volume, const float sampleRate)
+{
+	if (sampleRate <= 0.f)
+		throw std::invalid_argument("Sample rate must be greater than 0.");
+
+	m_SampleRate = sampleRate;
+	SetVolume(volume);
+	UpdatePhaseIncrement();
+}
 
 float Sound::GetBuffer()
 {
-	return GenerateSample() * TotalGain();
+	float sample = std::sinf(m_Phase);
+
+	m_Phase += m_PhaseIncrement;
+
+	if (m_Phase >= 2.f * std::numbers::pi_v<float>)
+		m_Phase -= 2.f * std::numbers::pi_v<float>;
+
+	return sample * TotalGain();
+	//return GenerateSample() * TotalGain();
 }
 
 void Sound::SetVolume(float volume)
@@ -72,6 +88,29 @@ float Sound::TotalGain() const
 float Sound::TotalDBLevel() const
 {
 	return m_DBLevel + GetVolumeAsDB();
+}
+
+void Sound::SetFrequency(const float frequency)
+{
+	m_Frequency = frequency;
+	UpdatePhaseIncrement();
+}
+
+float Sound::GetFrequency() const
+{
+	return m_Frequency;
+}
+
+void Sound::UpdatePhaseIncrement()
+{
+	if (m_SampleRate < 1.f)
+	{
+		std::cerr << "Sample rate must be greater than 0!\n";
+		return;
+	}
+
+	m_PhaseIncrement += 2.f * std::numbers::pi_v<float> *
+			(m_Frequency / m_SampleRate);
 }
 
 
