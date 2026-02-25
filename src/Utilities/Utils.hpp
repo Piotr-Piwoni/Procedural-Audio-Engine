@@ -15,4 +15,15 @@ inline void* GladLoader(const char* name)
 {
 	return reinterpret_cast<void*>(glfwGetProcAddress(name));
 }
+
+inline float AsDecibels(const float gain)
+{
+	return std::log10f(gain);
+}
+
+inline float AsGain(const float dB)
+{
+	return std::powf(10.f, dB / 20.f);
+
+}
 }
