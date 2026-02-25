@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <unordered_map>
 #include <vector>
 
 #include "GLFW/glfw3.h"
@@ -34,5 +35,6 @@ private:
 
 	float m_MasterVolume{1.f};
 	std::vector<Core::Audio::Sound> m_Sounds{};
+	std::unordered_map<Core::Audio::Sound*, float> m_BaseFrequencies{};
 };
 }

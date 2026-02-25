@@ -17,9 +17,13 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 	glfwSetKeyCallback(m_Window, KeyCallback);
 
 	m_Sounds.reserve(16);
+	m_BaseFrequencies.reserve(16);
 
 	for (int i = 0; i < 2; i++)
 		m_Sounds.emplace_back(0.25f, m_Backend->GetFormat()->nSamplesPerSec);
+
+	for (auto& sound : m_Sounds)
+		m_BaseFrequencies.insert_or_assign(&sound, sound.GetFrequency());
 }
 
 void MT::Application::Update()
@@ -41,14 +45,17 @@ void MT::Application::Update()
 		return;
 	}
 
-	// Generate some white noise.
+	for (auto& sound : m_Sounds)
+		sound.SetFrequency(m_BaseFrequencies.at(&sound) *
+						   sound.GetPitchMultiplier());
+
+	// Generate noise.
 	for (uint32_t i = 0; i < frames; i++)
 	{
 		float mixedSample = 0.f;
-		for (size_t k = 0; k < m_Sounds.size(); k++)
-		{
-			mixedSample += m_Sounds[k].GetBuffer();
-		}
+		for (auto& sound : m_Sounds)
+			mixedSample += sound.GetBuffer();
+
 		mixedSample *= m_MasterVolume;
 		mixedSample = std::clamp(mixedSample, -1.f, 1.f);
 
@@ -106,7 +113,17 @@ void MT::Application::Render()
 			if (dbKnob)
 				sound.SetDBLevel(db);
 
-
+			// Pitch input.
+			float pitchMult = sound.GetPitchMultiplier();
+			char pitchMultLabel[32];
+			std::snprintf(pitchMultLabel, sizeof(pitchMultLabel),
+						  "Pitch Multiplier##%zu", i);
+			bool pitchMultKnob = ImGuiKnobs::Knob(
+					pitchMultLabel, &pitchMult, 0.f, 10.f, 0.1f,
+					"%.1f dB", ImGuiKnobVariant_Tick,
+					64.f);
+			if (pitchMultKnob)
+				sound.SetPitchMultiplier(pitchMult);
 		}
 	}
 	ImGui::End();

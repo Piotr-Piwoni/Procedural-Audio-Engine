@@ -1,7 +1,4 @@
 ﻿#pragma once
-#include <cstdint>
-#include <mmdeviceapi.h>
-#include <optional>
 
 namespace MT::Core::Audio
 {
@@ -33,6 +30,9 @@ public:
 
 	void UpdatePhaseIncrement();
 
+	void SetPitchMultiplier(float multiplier);
+	[[nodiscard]] float GetPitchMultiplier() const;
+
 private:
 	[[nodiscard]] static float GenerateSample();
 
@@ -44,5 +44,6 @@ private:
 	float m_Phase{0.f};
 	float m_Frequency{440.f};
 	float m_PhaseIncrement{0.f};
+	float m_PitchMultiplier{1.f};
 };
 }

@@ -1,7 +1,6 @@
 ﻿#include "Sound.hpp"
 
 #include <algorithm>
-#include <cassert>
 #include <iostream>
 #include <numbers>
 #include <random>
@@ -109,8 +108,18 @@ void Sound::UpdatePhaseIncrement()
 		return;
 	}
 
-	m_PhaseIncrement += 2.f * std::numbers::pi_v<float> *
-			(m_Frequency / m_SampleRate);
+	m_PhaseIncrement = 2.f * std::numbers::pi_v<float> *
+					   (m_Frequency / m_SampleRate);
+}
+
+void Sound::SetPitchMultiplier(const float multiplier)
+{
+	m_PitchMultiplier = multiplier;
+}
+
+float Sound::GetPitchMultiplier() const
+{
+	return m_PitchMultiplier;
 }
 
 
