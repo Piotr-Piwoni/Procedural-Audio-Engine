@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Generators/SoundGenerator.hpp"
 
 namespace MT::Core::Audio
 {
@@ -28,22 +29,17 @@ public:
 	void SetFrequency(float frequency);
 	[[nodiscard]] float GetFrequency() const;
 
-	void UpdatePhaseIncrement();
-
 	void SetPitchMultiplier(float multiplier);
 	[[nodiscard]] float GetPitchMultiplier() const;
-
-private:
-	[[nodiscard]] static float GenerateSample();
 
 private:
 	float m_Volume{0.f};
 	float m_DBLevel{0.f};
 	bool m_IsMuted{false};
 	float m_SampleRate{1.f};
-	float m_Phase{0.f};
 	float m_Frequency{440.f};
-	float m_PhaseIncrement{0.f};
 	float m_PitchMultiplier{1.f};
+	SoundGenerator* m_Generator{nullptr};
+	GeneratorParams m_GeneratorParams{};
 };
 }

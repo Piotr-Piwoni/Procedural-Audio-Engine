@@ -2,14 +2,14 @@
 
 #include <algorithm>
 #include <iostream>
-#include <numbers>
 #include <random>
 
 #include "../../Utilities/Utils.hpp"
+#include "Generators/NoiseGenerator.hpp"
+#include "Generators/SineGenerator.hpp"
 
 namespace MT::Core::Audio
 {
-
 /**
  * @brief Constructs a Sound object with specified volume and sample rate.
  * @param volume Initial volume, clamped between 0 and 1.
@@ -23,7 +23,9 @@ Sound::Sound(const float volume, const float sampleRate)
 
 	m_SampleRate = sampleRate;
 	SetVolume(volume);
-	UpdatePhaseIncrement();
+
+	m_Generator = new SineGenerator();
+	m_Generator->UpdatePhaseIncrement(m_Frequency, m_SampleRate);
 }
 
 /**
@@ -32,15 +34,7 @@ Sound::Sound(const float volume, const float sampleRate)
  */
 float Sound::GetBuffer()
 {
-	float sample = std::sinf(m_Phase);
-
-	m_Phase += m_PhaseIncrement;
-
-	if (m_Phase >= 2.f * std::numbers::pi_v<float>)
-		m_Phase -= 2.f * std::numbers::pi_v<float>;
-
-	return sample * TotalGain();
-	//return GenerateSample() * TotalGain();
+	return m_Generator->Generate(m_GeneratorParams) * TotalGain();
 }
 
 /**
@@ -148,7 +142,7 @@ float Sound::TotalDBLevel() const
 void Sound::SetFrequency(const float frequency)
 {
 	m_Frequency = frequency;
-	UpdatePhaseIncrement();
+	m_Generator->UpdatePhaseIncrement(m_Frequency, m_SampleRate);
 }
 
 /**
@@ -158,22 +152,6 @@ void Sound::SetFrequency(const float frequency)
 float Sound::GetFrequency() const
 {
 	return m_Frequency;
-}
-
-/**
- * @brief Updates the phase increment based on current frequency and sample rate.
- * This controls the progression of the waveform phase for sample generation.
- */
-void Sound::UpdatePhaseIncrement()
-{
-	if (m_SampleRate < 1.f)
-	{
-		std::cerr << "Sample rate must be greater than 0!\n";
-		return;
-	}
-
-	m_PhaseIncrement = 2.f * std::numbers::pi_v<float> *
-					   (m_Frequency / m_SampleRate);
 }
 
 /**
@@ -192,18 +170,5 @@ void Sound::SetPitchMultiplier(const float multiplier)
 float Sound::GetPitchMultiplier() const
 {
 	return m_PitchMultiplier;
-}
-
-
-/**
- * @brief Generates a random sample in the range [-1, 1].
- * @return Random float between -1 and 1.
- */
-float Sound::GenerateSample()
-{
-	static std::mt19937 gen(std::random_device{}());
-	static std::uniform_real_distribution dist(-1.f, 1.0f);
-
-	return dist(gen);
 }
 }
