@@ -221,6 +221,12 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t i)
 	RenderSlider("Volume", i, sound.GetVolume(), 0.f, 1.f,
 				 [&](const float v) { sound.SetVolume(v); });
 
+	// Frequency.
+	float frequency = m_BaseFrequencies.at(&sound);
+	if (ImGui::DragFloat(MakeLabel("Hz", i).c_str(), &frequency, 1.f, 1.f,
+						 FLT_MAX, "%0.3f", ImGuiSliderFlags_AlwaysClamp))
+		m_BaseFrequencies[&sound] = frequency;
+
 	// Decibel Knob.
 	RenderKnob("dB Offset", i, sound.GetDBLevel(), -100.f, 100.f, 1.f,
 			   [&](const float db) { sound.SetDBLevel(db); }, "%.1f dB");
