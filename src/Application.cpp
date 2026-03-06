@@ -5,6 +5,7 @@
 #include <thread>
 
 #include "IMGUI/imgui.h"
+#include "ImGUI/imgui_internal.h"
 #include "ui/imgui-knobs.h"
 
 using namespace MT::Core::Audio;
@@ -61,29 +62,42 @@ void MT::Application::Update()
 
 void MT::Application::Render()
 {
-	ImGui::Begin("Hello ImGui");
-	ImGui::Text("Sound Settings");
-	ImGui::SliderFloat("Master Volume", &m_MasterVolume, 0.f, 1.f);
+	const ImVec2 size = ImGui::GetMainViewport()->Size;
+	ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+	ImGui::SetNextWindowPos({0.f, 0.f}, ImGuiCond_Appearing);
 
-	for (size_t i = 0; i < m_Sounds.size(); i++)
-		RenderSoundSettings(m_Sounds[i], i);
-
-	// Buttons for adding and removing sounds.
-	constexpr ImVec2 buttonSize = {200.f, 25.f};
-	if (ImGui::Button("Add Sound", buttonSize))
+	if (ImGui::Begin("Welcome to Musical Trunk", nullptr,
+					 ImGuiWindowFlags_AlwaysAutoResize |
+					 ImGuiWindowFlags_NoDocking |
+					 ImGuiWindowFlags_NoCollapse |
+					 ImGuiWindowFlags_NoMove))
 	{
-		auto& sound = m_Sounds.emplace_back(
-				0.25f, m_Backend->GetFormat()->nSamplesPerSec);
-		m_BaseFrequencies.insert_or_assign(&sound, sound.GetFrequency());
-	}
+		ImGui::Text("Sound Settings");
+		ImGui::SliderFloat("Master Volume", &m_MasterVolume, 0.f, 1.f);
+		CreateStartStopAudioButton();
 
-	if (!m_Sounds.empty() && ImGui::Button("Remove Sound", buttonSize))
-	{
-		auto& sound = m_Sounds.back();
-		m_BaseFrequencies.erase(&sound);
-		m_Sounds.pop_back();
-	}
+		ImGui::Dummy({0.f, 15.f}); //< Spacer.
+		for (size_t i = 0; i < m_Sounds.size(); i++)
+			RenderSoundSettings(m_Sounds[i], i);
 
+
+		// Buttons for adding and removing sounds.
+		ImGui::Dummy({0.f, 10.f}); //< Spacer.
+		constexpr ImVec2 buttonSize = {200.f, 25.f};
+		if (ImGui::Button("Add Sound", buttonSize))
+		{
+			auto& sound = m_Sounds.emplace_back(
+					0.25f, m_Backend->GetFormat()->nSamplesPerSec);
+			m_BaseFrequencies.insert_or_assign(&sound, sound.GetFrequency());
+		}
+
+		if (!m_Sounds.empty() && ImGui::Button("Remove Sound", buttonSize))
+		{
+			auto& sound = m_Sounds.back();
+			m_BaseFrequencies.erase(&sound);
+			m_Sounds.pop_back();
+		}
+	}
 	ImGui::End();
 }
 
@@ -217,4 +231,23 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t i)
 	RenderKnob("Pitch Multiplier", i, sound.GetPitchMultiplier(), 0.f,
 			   10.f, 0.1f, [&](const float p) { sound.SetPitchMultiplier(p); },
 			   "%0.1f");
+}
+
+void MT::Application::CreateStartStopAudioButton() const
+{
+	const auto state = m_Backend->GetPlaybackState();
+	std::string startStopBtnLabel;
+	if (state == PlaybackState::PLAYING)
+		startStopBtnLabel = "Stop";
+	else if (state == PlaybackState::STOPPED)
+		startStopBtnLabel = "Start";
+
+	if (!ImGui::Button(startStopBtnLabel.c_str(), {100.f, 25.f}) ||
+		m_Sounds.empty())
+		return;
+
+	if (state == PlaybackState::PLAYING)
+		m_Backend->StopPlayback();
+	else if (state == PlaybackState::STOPPED)
+		m_Backend->StartPlayback();
 }

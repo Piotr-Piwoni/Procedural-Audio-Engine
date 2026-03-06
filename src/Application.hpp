@@ -41,6 +41,8 @@ private:
 
 	void RenderSoundSettings(Core::Audio::Sound& sound, size_t i);
 
+	void CreateStartStopAudioButton() const;
+
 private:
 	GLFWwindow* m_Window{nullptr};
 	Core::Audio::AudioBackend* m_Backend{nullptr};
