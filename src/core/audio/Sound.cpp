@@ -16,7 +16,7 @@ namespace MT::Core::Audio
  * @param sampleRate Sample rate in Hz; must be greater than 0.
  * @throws std::invalid_argument If sampleRate is <= 0.
  */
-Sound::Sound(const float volume, const float sampleRate)
+Sound::Sound(const float volume, const float sampleRate, GeneratorType type)
 {
 	if (sampleRate <= 0.f)
 		throw std::invalid_argument("Sample rate must be greater than 0.");
@@ -24,7 +24,7 @@ Sound::Sound(const float volume, const float sampleRate)
 	m_SampleRate = sampleRate;
 	SetVolume(volume);
 
-	m_Generator = new SineGenerator();
+	SetGeneratorType(type);
 	m_Generator->UpdatePhaseIncrement(m_Frequency, m_SampleRate);
 }
 
@@ -170,5 +170,28 @@ void Sound::SetPitchMultiplier(const float multiplier)
 float Sound::GetPitchMultiplier() const
 {
 	return m_PitchMultiplier;
+}
+
+void Sound::SetGeneratorType(const GeneratorType type)
+{
+	m_Type = type;
+
+	switch (m_Type)
+	{
+	case GeneratorType::NONE:
+	case GeneratorType::SINE:
+		m_Generator.reset();
+		m_Generator = std::make_unique<SineGenerator>();
+		break;
+	case GeneratorType::NOISE:
+		m_Generator.reset();
+		m_Generator = std::make_unique<NoiseGenerator>();
+		break;
+	}
+}
+
+GeneratorType Sound::GetGeneratorType() const
+{
+	return m_Type;
 }
 }

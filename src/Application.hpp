@@ -2,9 +2,9 @@
 #include <vector>
 
 #include "chrono"
-#include "GLFW/glfw3.h"
 #include "core/audio/AudioBackend.hpp"
 #include "core/audio/Sound.hpp"
+#include "GLFW/glfw3.h"
 
 namespace MT
 {
@@ -41,7 +41,7 @@ private:
 	void RenderKnob(const std::string& name, size_t index, T value, T min,
 					T max, T step, Fn setter, const char* fmt = "%0.3f");
 
-	void RenderSoundSettings(Core::Audio::Sound& sound, size_t i);
+	void RenderSoundSettings(Core::Audio::Sound& sound, size_t index);
 
 	void CreateStartStopAudioButton();
 

@@ -24,6 +24,5 @@ inline float AsDecibels(const float gain)
 inline float AsGain(const float dB)
 {
 	return std::powf(10.f, dB / 20.f);
-
 }
 }

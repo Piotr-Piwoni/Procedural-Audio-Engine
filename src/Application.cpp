@@ -7,6 +7,7 @@
 #include "IMGUI/imgui.h"
 #include "ImGUI/imgui_internal.h"
 #include "ui/imgui-knobs.h"
+#include "Utilities/Utils.hpp"
 
 using namespace MT::Core::Audio;
 
@@ -228,47 +229,73 @@ void MT::Application::RenderKnob(const std::string& name, size_t index,
 /**
  * @brief Renders the ImGui UI for editing the properties of a Sound object.
  * @param sound Sound object to render controls for.
- * @param i Index of the sound in a list, used for unique widget labels.
+ * @param index Index of the sound in a list, used for unique widget labels.
  *
  * Renders mute/unmute button, volume slider, decibel offset knob, and pitch multiplier knob.
  */
-void MT::Application::RenderSoundSettings(Sound& sound, const size_t i)
+void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 {
-	const std::string heading = MakeLabel("Sound " + std::to_string(i + 1), i);
+	const std::string heading = MakeLabel("Sound " + std::to_string(index + 1),
+										  index);
 
-	if (!ImGui::CollapsingHeader(heading.c_str()))
-		return;
+	if (!ImGui::CollapsingHeader(heading.c_str()))return;
 
 	// Mute/Unmute button.
 	const char* label = sound.IsMuted() ? "Unmute" : "Mute";
-	if (ImGui::Button(MakeLabel(label, i).c_str()))
-	{
-		if (sound.IsMuted())
-			sound.UnMute();
-		else
-			sound.Mute();
-	}
+	if (ImGui::Button(MakeLabel(label, index).c_str()))
+		sound.IsMuted() ? sound.UnMute() : sound.Mute();
+
 
 	// Volume Slider.
-	RenderSlider("Volume", i, sound.GetVolume(), 0.f, 1.f,
+	RenderSlider("Volume", index, sound.GetVolume(), 0.f, 1.f,
 				 [&](const float v) { sound.SetVolume(v); });
 
+
+	// Arrays for combo.
+	static constexpr GeneratorType GENERATOR_TYPES[] = {
+		GeneratorType::SINE,
+		GeneratorType::NOISE
+	};
+	static const char* generatorTitles[] = {"Sine", "White Noise"};
+
+	// Find combo index from current type.
+	int selectedIndex = 0;
+	for (size_t i = 0; i < std::size(GENERATOR_TYPES); i++)
+		if (sound.GetGeneratorType() == GENERATOR_TYPES[i])
+			selectedIndex = static_cast<int>(i);
+
+	if (ImGui::Combo(MakeLabel("Sound Type", index).c_str(), &selectedIndex,
+					 generatorTitles, std::size(GENERATOR_TYPES)))
+		sound.SetGeneratorType(GENERATOR_TYPES[selectedIndex]);
+
+
 	// Frequency.
-	float frequency = m_BaseFrequencies[i];
-	if (ImGui::DragFloat(MakeLabel("Hz", i).c_str(), &frequency, 1.f, 1.f,
-						 FLT_MAX, "%0.3f", ImGuiSliderFlags_AlwaysClamp))
-		m_BaseFrequencies[i] = frequency;
+	if (sound.GetGeneratorType() == GeneratorType::SINE)
+	{
+		float frequency = m_BaseFrequencies[index];
+		if (ImGui::DragFloat(MakeLabel("Hz", index).c_str(), &frequency, 1.f,
+							 1.f, FLT_MAX, "%0.3f",
+							 ImGuiSliderFlags_AlwaysClamp))
+			m_BaseFrequencies[index] = frequency;
+	}
+
 
 	// Decibel Knob.
-	RenderKnob("dB Offset", i, sound.GetDBLevel(), -100.f, 100.f, 1.f,
+	RenderKnob("dB Offset", index, sound.GetDBLevel(), -100.f, 100.f, 1.f,
 			   [&](const float db) { sound.SetDBLevel(db); }, "%.1f dB");
 
-	ImGui::SameLine(90.f);
 
 	// Pitch Knob.
-	RenderKnob("Pitch Multiplier", i, sound.GetPitchMultiplier(), 0.f,
-			   10.f, 0.1f, [&](const float p) { sound.SetPitchMultiplier(p); },
-			   "%0.1f");
+	ImGui::SameLine(90.f);
+	if (sound.GetGeneratorType() == GeneratorType::SINE)
+	{
+		RenderKnob("Pitch Multiplier", index, sound.GetPitchMultiplier(), 0.f,
+				   10.f, 0.1f, [&](const float p)
+				   {
+					   sound.SetPitchMultiplier(p);
+				   },
+				   "%0.1f");
+	}
 }
 
 void MT::Application::CreateStartStopAudioButton()

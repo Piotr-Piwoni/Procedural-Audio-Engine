@@ -183,6 +183,7 @@
         <ClInclude Include="src\Application.hpp"/>
         <ClInclude Include="src\core\audio\AudioBackend.hpp"/>
         <ClInclude Include="src\core\audio\AudioTypes.hpp"/>
+        <ClInclude Include="src\core\audio\Generators\GeneratorType.hpp"/>
         <ClInclude Include="src\core\audio\Generators\SineGenerator.hpp"/>
         <ClInclude Include="src\core\audio\Generators\SoundGenerator.hpp"/>
         <ClInclude Include="src\core\audio\Generators\NoiseGenerator.hpp"/>

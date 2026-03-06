@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Generators/GeneratorType.hpp"
 #include "Generators/SoundGenerator.hpp"
 
 namespace MT::Core::Audio
@@ -6,7 +7,8 @@ namespace MT::Core::Audio
 class Sound
 {
 public:
-	explicit Sound(float volume = 1.f, float sampleRate = 1.f);
+	explicit Sound(float volume = 1.f, float sampleRate = 1.f,
+				   GeneratorType type = GeneratorType::SINE);
 
 
 	[[nodiscard]] float GetBuffer();
@@ -32,6 +34,9 @@ public:
 	void SetPitchMultiplier(float multiplier);
 	[[nodiscard]] float GetPitchMultiplier() const;
 
+	void SetGeneratorType(GeneratorType type);
+	[[nodiscard]] GeneratorType GetGeneratorType() const;
+
 private:
 	float m_Volume{0.f};
 	float m_DBLevel{0.f};
@@ -39,7 +44,8 @@ private:
 	float m_SampleRate{1.f};
 	float m_Frequency{440.f};
 	float m_PitchMultiplier{1.f};
-	SoundGenerator* m_Generator{nullptr};
+	std::unique_ptr<SoundGenerator> m_Generator{nullptr};
 	GeneratorParams m_GeneratorParams{};
+	GeneratorType m_Type{GeneratorType::NONE};
 };
 }
