@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include <unordered_map>
 #include <vector>
 
+#include "chrono"
 #include "GLFW/glfw3.h"
 #include "core/audio/AudioBackend.hpp"
 #include "core/audio/Sound.hpp"
@@ -17,7 +17,7 @@ public:
 	void Render();
 
 private:
-	void OnKey(int key, int scancode, int action, int mods) const;
+	void OnKey(int key, int scancode, int action, int mods);
 
 	/// <summary> GLFW static callback to key press detection. </summary>
 	static void KeyCallback(GLFWwindow* window, const int key,
@@ -28,6 +28,8 @@ private:
 		if (app)
 			app->OnKey(key, scancode, action, mods);
 	}
+
+	void PlayAudio();
 
 	static std::string MakeLabel(const std::string& name, size_t index);
 
@@ -41,7 +43,7 @@ private:
 
 	void RenderSoundSettings(Core::Audio::Sound& sound, size_t i);
 
-	void CreateStartStopAudioButton() const;
+	void CreateStartStopAudioButton();
 
 private:
 	GLFWwindow* m_Window{nullptr};
@@ -50,5 +52,8 @@ private:
 	float m_MasterVolume{1.f};
 	std::vector<Core::Audio::Sound> m_Sounds{};
 	std::vector<float> m_BaseFrequencies{};
+	uint32_t m_FramesGenerated{0};
+	std::chrono::duration<float> m_AudioLength{5.f};
+	bool m_IsSoundContinues{false};
 };
 }

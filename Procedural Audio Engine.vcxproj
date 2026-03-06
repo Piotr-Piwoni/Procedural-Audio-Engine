@@ -579,7 +579,6 @@
         <ClInclude Include="third-party\ImGui\include\IMGUI\imstb_truetype.h"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Include=".clang-format"/>
         <Content Include="imgui.ini"/>
         <Content Include="third-party\Eigen\AccelerateSupport"/>
         <Content Include="third-party\Eigen\Cholesky"/>
