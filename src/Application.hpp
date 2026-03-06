@@ -49,6 +49,6 @@ private:
 
 	float m_MasterVolume{1.f};
 	std::vector<Core::Audio::Sound> m_Sounds{};
-	std::unordered_map<Core::Audio::Sound*, float> m_BaseFrequencies{};
+	std::vector<float> m_BaseFrequencies{};
 };
 }

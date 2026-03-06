@@ -39,12 +39,12 @@ void MT::Application::Update()
 		return;
 	}
 
-	for (auto& sound : m_Sounds)
-		sound.SetFrequency(m_BaseFrequencies.at(&sound) *
-						   sound.GetPitchMultiplier());
+	for (size_t i = 0; i < m_Sounds.size(); i++)
+		m_Sounds[i].SetFrequency(m_BaseFrequencies[i] *
+								 m_Sounds[i].GetPitchMultiplier());
 
 	// Generate noise.
-	for (uint32_t i = 0; i < frames; i++)
+	for (uint32_t frame = 0; frame < frames; frame++)
 	{
 		float mixedSample = 0.f;
 		for (auto& sound : m_Sounds)
@@ -53,9 +53,9 @@ void MT::Application::Update()
 		mixedSample *= m_MasterVolume;
 		mixedSample = std::clamp(mixedSample, -1.f, 1.f);
 
-		buffer[i * format->nChannels + 0] = mixedSample;
+		buffer[frame * format->nChannels + 0] = mixedSample;
 		if (format->nChannels > 1)
-			buffer[i * format->nChannels + 1] = mixedSample;
+			buffer[frame * format->nChannels + 1] = mixedSample;
 	}
 	m_Backend->ReleaseBuffer(frames);
 }
@@ -86,15 +86,14 @@ void MT::Application::Render()
 		constexpr ImVec2 buttonSize = {200.f, 25.f};
 		if (ImGui::Button("Add Sound", buttonSize))
 		{
-			auto& sound = m_Sounds.emplace_back(
-					0.25f, m_Backend->GetFormat()->nSamplesPerSec);
-			m_BaseFrequencies.insert_or_assign(&sound, sound.GetFrequency());
+			const auto& sound = m_Sounds.emplace_back(0.25f,
+				m_Backend->GetFormat()->nSamplesPerSec);
+			m_BaseFrequencies.push_back(sound.GetFrequency());
 		}
 
 		if (!m_Sounds.empty() && ImGui::Button("Remove Sound", buttonSize))
 		{
-			auto& sound = m_Sounds.back();
-			m_BaseFrequencies.erase(&sound);
+			m_BaseFrequencies.pop_back();
 			m_Sounds.pop_back();
 		}
 	}
@@ -222,10 +221,10 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t i)
 				 [&](const float v) { sound.SetVolume(v); });
 
 	// Frequency.
-	float frequency = m_BaseFrequencies.at(&sound);
+	float frequency = m_BaseFrequencies[i];
 	if (ImGui::DragFloat(MakeLabel("Hz", i).c_str(), &frequency, 1.f, 1.f,
 						 FLT_MAX, "%0.3f", ImGuiSliderFlags_AlwaysClamp))
-		m_BaseFrequencies[&sound] = frequency;
+		m_BaseFrequencies[i] = frequency;
 
 	// Decibel Knob.
 	RenderKnob("dB Offset", i, sound.GetDBLevel(), -100.f, 100.f, 1.f,
