@@ -183,11 +183,13 @@
         <ClInclude Include="src\Application.hpp"/>
         <ClInclude Include="src\core\audio\AudioBackend.hpp"/>
         <ClInclude Include="src\core\audio\AudioTypes.hpp"/>
+        <ClInclude Include="src\core\audio\Generators\GeneratorParams.hpp"/>
         <ClInclude Include="src\core\audio\Generators\GeneratorType.hpp"/>
         <ClInclude Include="src\core\audio\Generators\SawGenerator.hpp"/>
         <ClInclude Include="src\core\audio\Generators\SineGenerator.hpp"/>
         <ClInclude Include="src\core\audio\Generators\SoundGenerator.hpp"/>
         <ClInclude Include="src\core\audio\Generators\NoiseGenerator.hpp"/>
+        <ClInclude Include="src\core\audio\Generators\SquareGenerator.hpp"/>
         <ClInclude Include="src\core\audio\Sound.hpp"/>
         <ClInclude Include="src\core\ImGuiLayer.hpp"/>
         <ClInclude Include="src\core\Window.hpp"/>

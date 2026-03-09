@@ -255,9 +255,15 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 	static constexpr GeneratorType GENERATOR_TYPES[] = {
 		GeneratorType::SINE,
 		GeneratorType::NOISE,
-		GeneratorType::SAW_TOOTH
+		GeneratorType::SAW_TOOTH,
+		GeneratorType::SQUARE
 	};
-	static const char* generatorTitles[] = {"Sine", "White Noise", "Sawtooth"};
+	static const char* generatorTitles[] = {
+		"Sine",
+		"White Noise",
+		"Sawtooth",
+		"Square"
+	};
 
 	// Find combo index from current type.
 	int selectedIndex = 0;

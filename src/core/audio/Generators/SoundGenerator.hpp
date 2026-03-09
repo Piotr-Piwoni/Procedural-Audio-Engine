@@ -1,14 +1,8 @@
 ﻿#pragma once
-#include <iostream>
-#include <numbers>
+#include "GeneratorParams.hpp"
 
 namespace MT::Core::Audio
 {
-struct GeneratorParams
-{
-	uint32_t RandomSeed = 0;
-};
-
 class SoundGenerator
 {
 public:

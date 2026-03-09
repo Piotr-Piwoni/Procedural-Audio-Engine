@@ -1,4 +1,7 @@
 ﻿#pragma once
+#include <memory>
+
+#include "Generators/GeneratorParams.hpp"
 #include "Generators/GeneratorType.hpp"
 #include "Generators/SoundGenerator.hpp"
 
