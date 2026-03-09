@@ -5,6 +5,9 @@
 #include "core/audio/AudioBackend.hpp"
 #include "core/audio/Sound.hpp"
 #include "GLFW/glfw3.h"
+#include "Utilities/TypeDefinitions.hpp"
+
+namespace chrono = std::chrono;
 
 namespace MT
 {
@@ -53,7 +56,7 @@ private:
 	std::vector<Core::Audio::Sound> m_Sounds{};
 	std::vector<float> m_BaseFrequencies{};
 	uint32_t m_FramesGenerated{0};
-	std::chrono::duration<float> m_AudioLength{5.f};
+	Duration m_AudioLength{5.f};
 	bool m_IsSoundContinues{false};
 };
 }

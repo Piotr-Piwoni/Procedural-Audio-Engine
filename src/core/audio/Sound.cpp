@@ -4,10 +4,10 @@
 #include <iostream>
 
 #include "../../Utilities/Utils.hpp"
-#include "Generators/NoiseGenerator.hpp"
-#include "Generators/SawGenerator.hpp"
-#include "Generators/SineGenerator.hpp"
-#include "Generators/SquareGenerator.hpp"
+#include "generators/NoiseGenerator.hpp"
+#include "generators/SawGenerator.hpp"
+#include "generators/SineGenerator.hpp"
+#include "generators/SquareGenerator.hpp"
 
 namespace MT::Core::Audio
 {
@@ -202,5 +202,15 @@ void Sound::SetGeneratorType(const GeneratorType type)
 GeneratorType Sound::GetGeneratorType() const
 {
 	return m_Type;
+}
+
+void Sound::SetAudioLength(const Duration length)
+{
+	m_AudioLength = length;
+}
+
+Duration Sound::GetAudioLength() const
+{
+	return m_AudioLength;
 }
 }

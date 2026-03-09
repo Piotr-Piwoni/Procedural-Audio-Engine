@@ -1,9 +1,11 @@
 ﻿#pragma once
+#include <chrono>
 #include <memory>
 
-#include "Generators/GeneratorParams.hpp"
-#include "Generators/GeneratorType.hpp"
-#include "Generators/SoundGenerator.hpp"
+#include "../../Utilities/TypeDefinitions.hpp"
+#include "generators/GeneratorParams.hpp"
+#include "generators/GeneratorType.hpp"
+#include "generators/SoundGenerator.hpp"
 
 namespace MT::Core::Audio
 {
@@ -40,6 +42,9 @@ public:
 	void SetGeneratorType(GeneratorType type);
 	[[nodiscard]] GeneratorType GetGeneratorType() const;
 
+	void SetAudioLength(Duration length);
+	[[nodiscard]] Duration GetAudioLength() const;
+
 private:
 	float m_Volume{0.f};
 	float m_DBLevel{0.f};
@@ -50,5 +55,6 @@ private:
 	std::unique_ptr<SoundGenerator> m_Generator{nullptr};
 	GeneratorParams m_GeneratorParams{};
 	GeneratorType m_Type{GeneratorType::NONE};
+	Duration m_AudioLength{0.f};
 };
 }

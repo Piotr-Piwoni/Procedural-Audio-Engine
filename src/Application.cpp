@@ -33,7 +33,7 @@ void MT::Application::Update()
 
 	if (frames == 0)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		std::this_thread::sleep_for(chrono::milliseconds(1));
 		return;
 	}
 
@@ -99,7 +99,11 @@ void MT::Application::Render()
 								 0.f,
 								 FLT_MAX, "%0.3f",
 								 ImGuiSliderFlags_AlwaysClamp))
-				m_AudioLength = std::chrono::duration<float>(audioLength);
+			{
+				m_AudioLength = Duration(audioLength);
+				for (auto& sound : m_Sounds)
+					sound.SetAudioLength(m_AudioLength);
+			}
 			ImGui::Unindent();
 		}
 
@@ -114,9 +118,10 @@ void MT::Application::Render()
 		constexpr ImVec2 buttonSize = {200.f, 25.f};
 		if (ImGui::Button("Add Sound", buttonSize))
 		{
-			const auto& sound = m_Sounds.emplace_back(0.25f,
-				m_Backend->GetFormat()->nSamplesPerSec);
+			auto& sound = m_Sounds.emplace_back(0.25f, m_Backend->GetFormat()->
+												nSamplesPerSec);
 			m_BaseFrequencies.push_back(sound.GetFrequency());
+			sound.SetAudioLength(m_AudioLength);
 		}
 
 		if (!m_Sounds.empty() && ImGui::Button("Remove Sound", buttonSize))
