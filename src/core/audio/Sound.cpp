@@ -6,6 +6,7 @@
 
 #include "../../Utilities/Utils.hpp"
 #include "Generators/NoiseGenerator.hpp"
+#include "Generators/SawGenerator.hpp"
 #include "Generators/SineGenerator.hpp"
 
 namespace MT::Core::Audio
@@ -186,6 +187,10 @@ void Sound::SetGeneratorType(const GeneratorType type)
 	case GeneratorType::NOISE:
 		m_Generator.reset();
 		m_Generator = std::make_unique<NoiseGenerator>();
+		break;
+	case GeneratorType::SAW_TOOTH:
+		m_Generator.reset();
+		m_Generator = std::make_unique<SawGenerator>();
 		break;
 	}
 }

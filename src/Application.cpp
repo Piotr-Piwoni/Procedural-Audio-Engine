@@ -254,9 +254,10 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 	// Arrays for combo.
 	static constexpr GeneratorType GENERATOR_TYPES[] = {
 		GeneratorType::SINE,
-		GeneratorType::NOISE
+		GeneratorType::NOISE,
+		GeneratorType::SAW_TOOTH
 	};
-	static const char* generatorTitles[] = {"Sine", "White Noise"};
+	static const char* generatorTitles[] = {"Sine", "White Noise", "Sawtooth"};
 
 	// Find combo index from current type.
 	int selectedIndex = 0;
@@ -270,7 +271,7 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 
 
 	// Frequency.
-	if (sound.GetGeneratorType() == GeneratorType::SINE)
+	if (sound.GetGeneratorType() != GeneratorType::NOISE)
 	{
 		float frequency = m_BaseFrequencies[index];
 		if (ImGui::DragFloat(MakeLabel("Hz", index).c_str(), &frequency, 1.f,
@@ -287,7 +288,7 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 
 	// Pitch Knob.
 	ImGui::SameLine(90.f);
-	if (sound.GetGeneratorType() == GeneratorType::SINE)
+	if (sound.GetGeneratorType() != GeneratorType::NOISE)
 	{
 		RenderKnob("Pitch Multiplier", index, sound.GetPitchMultiplier(), 0.f,
 				   10.f, 0.1f, [&](const float p)

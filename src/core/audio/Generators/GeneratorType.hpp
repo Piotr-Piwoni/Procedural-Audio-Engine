@@ -7,7 +7,8 @@ enum class GeneratorType : uint8_t
 {
 	NONE = 0,
 	SINE,
-	NOISE
+	NOISE,
+	SAW_TOOTH
 };
 
 inline const char* ToString(const GeneratorType type)
@@ -17,6 +18,7 @@ inline const char* ToString(const GeneratorType type)
 	case GeneratorType::NONE: return "NONE";
 	case GeneratorType::SINE: return "SINE";
 	case GeneratorType::NOISE: return "NOISE";
+	case GeneratorType::SAW_TOOTH: return "SAW_TOOTH";
 	default: return "unknown";
 	}
 }

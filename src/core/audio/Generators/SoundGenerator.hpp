@@ -20,17 +20,7 @@ public:
 	 * @brief Updates the phase increment based on current frequency and sample rate.
 	 * This controls the progression of the waveform phase for sample generation.
 	 */
-	void UpdatePhaseIncrement(const float frequency, const float sampleRate)
-	{
-		if (sampleRate < 1.f)
-		{
-			std::cerr << "Sample rate must be greater than 0!\n";
-			return;
-		}
-
-		m_PhaseIncrement = 2.f * std::numbers::pi_v<float> *
-						   (frequency / sampleRate);
-	}
+	virtual void UpdatePhaseIncrement(float frequency, float sampleRate) {}
 
 protected:
 	float m_Phase{0.f};

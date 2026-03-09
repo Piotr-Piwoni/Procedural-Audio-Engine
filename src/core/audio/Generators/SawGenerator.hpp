@@ -1,20 +1,19 @@
 ﻿#pragma once
-#include <numbers>
-
 #include "SoundGenerator.hpp"
 
 namespace MT::Core::Audio
 {
-class SineGenerator final : public SoundGenerator
+class SawGenerator final : public SoundGenerator
 {
 public:
 	float Generate(const GeneratorParams& params) override
 	{
-		const float sample = std::sinf(m_Phase);
+		const float sample = 2.0f * m_Phase - 1.0f;
 
 		m_Phase += m_PhaseIncrement;
-		if (m_Phase >= 2.f * std::numbers::pi_v<float>)
-			m_Phase -= 2.f * std::numbers::pi_v<float>;
+
+		if (m_Phase >= 1.0f)
+			m_Phase -= 1.0f;
 
 		return sample;
 	}
@@ -28,8 +27,7 @@ public:
 			return;
 		}
 
-		m_PhaseIncrement = 2.f * std::numbers::pi_v<float> *
-						   (frequency / sampleRate);
+		m_PhaseIncrement = frequency / sampleRate;
 	}
 };
 }
