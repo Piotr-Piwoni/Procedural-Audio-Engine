@@ -20,14 +20,25 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 
 	m_Sounds.reserve(16);
 	m_BaseFrequencies.reserve(16);
+
+	if (const WAVEFORMATEX* format = m_Backend->GetFormat())
+		m_SampleRate = format->nSamplesPerSec;
 }
 
 void MT::Application::Update()
 {
-	if (m_Backend->GetPlaybackState() != PlaybackState::PLAYING) return;
-
 	const WAVEFORMATEX* format = m_Backend->GetFormat();
 	if (!format) return;
+
+	// Update sample rate if it has changed.
+	if (m_SampleRate != format->nSamplesPerSec)
+	{
+		m_SampleRate = format->nSamplesPerSec;
+		for (auto& sound : m_Sounds)
+			sound.SetSampleRate(m_SampleRate);
+	}
+
+	if (m_Backend->GetPlaybackState() != PlaybackState::PLAYING) return;
 
 	const auto [buffer, frames] = m_Backend->GetBuffer();
 	if (!buffer) return;
@@ -119,8 +130,7 @@ void MT::Application::Render()
 		constexpr ImVec2 buttonSize = {200.f, 25.f};
 		if (ImGui::Button("Add Sound", buttonSize))
 		{
-			auto& sound = m_Sounds.emplace_back(0.25f, m_Backend->GetFormat()->
-												nSamplesPerSec);
+			auto& sound = m_Sounds.emplace_back(0.25f, m_SampleRate);
 			m_BaseFrequencies.push_back(sound.GetFrequency());
 			sound.SetAudioLength(m_AudioLength);
 		}
@@ -322,7 +332,7 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 
 	// Effects UI.
 	std::vector<std::unique_ptr<AudioEffect>>& effects = sound.GetEffects();
-	for (size_t i = 0; i < effects.size();)
+	for (int i = 0; static_cast<size_t>(i) < effects.size();)
 	{
 		ImGui::PushID(i);
 		const bool remove = !effects[i]->RenderUI();

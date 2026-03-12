@@ -19,19 +19,17 @@ namespace MT::Core::Audio
  * @param type Type of the sound generator used.
  * @throws std::invalid_argument If sampleRate is <= 0.
  */
-Sound::Sound(const float volume, const float sampleRate,
+Sound::Sound(const float volume, const unsigned long sampleRate,
 			 const GeneratorType type)
 {
-	if (sampleRate <= 0.f)
+	if (sampleRate < 1)
 		throw std::invalid_argument("Sample rate must be greater than 0.");
 
 	m_Effects.reserve(5);
 
-	m_SampleRate = sampleRate;
-	SetVolume(volume);
-
 	SetGeneratorType(type);
-	m_Generator->UpdatePhaseIncrement(m_Frequency, m_SampleRate);
+	SetSampleRate(sampleRate);
+	SetVolume(volume);
 }
 
 /**
@@ -42,9 +40,8 @@ float Sound::Generate()
 {
 	float sample = m_Generator->Generate(m_GeneratorParams);
 
-	const float deltaTime = 1.0f / m_SampleRate;
 	for (const auto& audioEffect : m_Effects)
-		sample = audioEffect->Process(sample, deltaTime);
+		sample = audioEffect->Process(sample, m_DeltaTime);
 
 	return sample * TotalGain();
 }
@@ -164,6 +161,24 @@ void Sound::SetFrequency(const float frequency)
 float Sound::GetFrequency() const
 {
 	return m_Frequency;
+}
+
+void Sound::SetSampleRate(const unsigned long sampleRate)
+{
+	if (sampleRate < 1)
+	{
+		std::cerr << "Sample rate must be greater than 0!\n";
+		return;
+	}
+
+	m_SampleRate = sampleRate;
+	m_Generator->UpdatePhaseIncrement(m_Frequency, m_SampleRate);
+	m_DeltaTime = 1.0f / static_cast<float>(m_SampleRate);
+}
+
+unsigned long Sound::GetSampleRate() const
+{
+	return m_SampleRate;
 }
 
 /**

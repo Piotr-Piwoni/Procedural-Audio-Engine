@@ -58,5 +58,6 @@ private:
 	uint32_t m_FramesGenerated{0};
 	Duration m_AudioLength{5.f};
 	bool m_IsSoundContinues{false};
+	unsigned long m_SampleRate{0};
 };
 }

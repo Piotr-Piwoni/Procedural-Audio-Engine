@@ -14,7 +14,7 @@ namespace MT::Core::Audio
 class Sound
 {
 public:
-	explicit Sound(float volume = 1.f, float sampleRate = 1.f,
+	explicit Sound(float volume = 1.f, unsigned long sampleRate = 1,
 				   GeneratorType type = GeneratorType::SINE);
 
 
@@ -38,6 +38,9 @@ public:
 	void SetFrequency(float frequency);
 	[[nodiscard]] float GetFrequency() const;
 
+	void SetSampleRate(unsigned long sampleRate);
+	[[nodiscard]] unsigned long GetSampleRate() const;
+
 	void SetPitchMultiplier(float multiplier);
 	[[nodiscard]] float GetPitchMultiplier() const;
 
@@ -55,7 +58,7 @@ private:
 	float m_Volume{0.f};
 	float m_DBLevel{0.f};
 	bool m_IsMuted{false};
-	float m_SampleRate{1.f};
+	unsigned long m_SampleRate{1};
 	float m_Frequency{440.f};
 	float m_PitchMultiplier{1.f};
 	std::unique_ptr<SoundGenerator> m_Generator{nullptr};
@@ -63,6 +66,7 @@ private:
 	GeneratorType m_Type{GeneratorType::NONE};
 	Duration m_AudioLength{0.f};
 	std::vector<std::unique_ptr<AudioEffect>> m_Effects{};
+	float m_DeltaTime{0.f};
 };
 
 template<typename T>
