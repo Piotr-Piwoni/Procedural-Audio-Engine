@@ -33,8 +33,13 @@ public:
 			m_Time > m_AudioLength - m_FadeOutPoint)
 		{
 			const float remaining = (m_AudioLength - m_Time).count();
-			envelope = std::min(envelope, remaining / m_FadeOutPoint.count());
+			envelope = std::min(envelope, remaining / std::max(
+												  m_FadeOutPoint.count(),
+												  0.0001f));
 		}
+
+		if (m_Time >= m_AudioLength && m_AudioLength.count() > 0.f)
+			Reset();
 
 		return sample * std::clamp(envelope, 0.f, 1.f);
 	}
@@ -43,28 +48,34 @@ public:
 
 	bool RenderUI() override
 	{
-		ImGui::Text("Fade Effect");
-		ImGui::SameLine();
+		ImGui::PushID(this);
 
-		if (ImGui::Button("X"))
-			return false;
-
-		float inPoint = m_FadeInPoint.count();
-		if (ImGui::DragFloat("Fade Start (seconds)", &inPoint, 1.f, 0.f,
-							 m_AudioLength.count(), "%0.3f",
-							 ImGuiSliderFlags_AlwaysClamp))
+		if (ImGui::CollapsingHeader("Fade Effect"))
 		{
-			SetFadeInPoint(inPoint);
+			if (ImGui::Button("X"))
+			{
+				Reset();
+				return false;
+			}
+
+			float inPoint = m_FadeInPoint.count();
+			const float max = m_AudioLength.count() > 0.f
+							  ? m_AudioLength.count() : FLT_MAX;
+			if (ImGui::DragFloat("Fade Start (seconds)", &inPoint, 1.f, 0.f,
+								 max, "%0.3f", ImGuiSliderFlags_AlwaysClamp))
+				SetFadeInPoint(inPoint);
+
+			if (m_AudioLength.count() > 0.f)
+			{
+				float outPoint = m_FadeOutPoint.count();
+				if (ImGui::DragFloat("Fade Out (seconds)", &outPoint, 1.f, 0.f,
+									 m_AudioLength.count(), "%0.3f",
+									 ImGuiSliderFlags_AlwaysClamp))
+					SetFadeOutPoint(outPoint);
+			}
 		}
 
-		float outPoint = m_FadeOutPoint.count();
-		if (ImGui::DragFloat("Fade Out (seconds)", &outPoint, 1.f, 0.f,
-							 m_AudioLength.count(), "%0.3f",
-							 ImGuiSliderFlags_AlwaysClamp))
-		{
-			SetFadeOutPoint(outPoint);
-		}
-
+		ImGui::PopID();
 		return true;
 	}
 
@@ -86,7 +97,8 @@ public:
 	void SetFadeOutPoint(float timeStamp)
 	{
 		// If the provided fade-out is larger than the length clip, set it to that length.
-		timeStamp = std::min(timeStamp, m_AudioLength.count());
+		if (m_AudioLength.count() > 0.f)
+			timeStamp = std::min(timeStamp, m_AudioLength.count());
 		m_FadeOutPoint = Duration(timeStamp);
 	}
 

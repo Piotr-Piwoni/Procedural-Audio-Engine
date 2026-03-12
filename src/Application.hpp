@@ -39,14 +39,14 @@ private:
 	template<class T, class Fn>
 	void RenderSlider(const std::string& name, size_t index, T value, T min,
 					  T max, Fn setter, const char* fmt = "%0.3f");
-
 	template<class T, class Fn>
 	void RenderKnob(const std::string& name, size_t index, T value, T min,
 					T max, T step, Fn setter, const char* fmt = "%0.3f");
 
 	void RenderSoundSettings(Core::Audio::Sound& sound, size_t index);
-
 	void CreateStartStopAudioButton();
+
+	void UpdateSoundLength();
 
 private:
 	GLFWwindow* m_Window{nullptr};

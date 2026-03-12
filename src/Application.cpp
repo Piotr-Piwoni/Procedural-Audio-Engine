@@ -11,6 +11,7 @@
 #include "Utilities/Utils.hpp"
 
 using namespace MT::Core::Audio;
+using namespace std::chrono_literals;
 
 MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 	m_Window(win), m_Backend{backend}
@@ -25,8 +26,11 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 		m_SampleRate = format->nSamplesPerSec;
 }
 
+
 void MT::Application::Update()
 {
+	UpdateSoundLength();
+
 	const WAVEFORMATEX* format = m_Backend->GetFormat();
 	if (!format) return;
 
@@ -108,14 +112,9 @@ void MT::Application::Render()
 			ImGui::Indent();
 			float audioLength = m_AudioLength.count();
 			if (ImGui::DragFloat("Audio Length (seconds)", &audioLength, 1.f,
-								 0.f,
-								 FLT_MAX, "%0.3f",
+								 0.f,FLT_MAX, "%0.3f",
 								 ImGuiSliderFlags_AlwaysClamp))
-			{
 				m_AudioLength = Duration(audioLength);
-				for (auto& sound : m_Sounds)
-					sound.SetAudioLength(m_AudioLength);
-			}
 			ImGui::Unindent();
 		}
 
@@ -181,6 +180,12 @@ void MT::Application::OnKey(const int key, int scancode,
 void MT::Application::PlayAudio()
 {
 	m_FramesGenerated = 0;
+
+	// Reset all effects on the sounds.
+	for (auto& sound : m_Sounds)
+		for (const auto& effect : sound.GetEffects())
+			effect->Reset();
+
 	m_Backend->StartPlayback();
 }
 
@@ -362,4 +367,17 @@ void MT::Application::CreateStartStopAudioButton()
 		m_Backend->StopPlayback();
 	else if (state == PlaybackState::STOPPED)
 		PlayAudio();
+}
+
+void MT::Application::UpdateSoundLength()
+{
+	if (m_Sounds.empty()) return;
+
+	for (auto& sound : m_Sounds)
+	{
+		if (m_IsSoundContinues)
+			sound.SetAudioLength(Duration(0.f));
+		else if (sound.GetAudioLength() != m_AudioLength)
+			sound.SetAudioLength(m_AudioLength);
+	}
 }
