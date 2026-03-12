@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../../Utilities/Utils.hpp"
+#include "effects/FadeEffect.hpp"
 #include "generators/NoiseGenerator.hpp"
 #include "generators/SawGenerator.hpp"
 #include "generators/SineGenerator.hpp"
@@ -15,12 +16,16 @@ namespace MT::Core::Audio
  * @brief Constructs a Sound object with specified volume and sample rate.
  * @param volume Initial volume, clamped between 0 and 1.
  * @param sampleRate Sample rate in Hz; must be greater than 0.
+ * @param type Type of the sound generator used.
  * @throws std::invalid_argument If sampleRate is <= 0.
  */
-Sound::Sound(const float volume, const float sampleRate, GeneratorType type)
+Sound::Sound(const float volume, const float sampleRate,
+			 const GeneratorType type)
 {
 	if (sampleRate <= 0.f)
 		throw std::invalid_argument("Sample rate must be greater than 0.");
+
+	m_Effects.reserve(5);
 
 	m_SampleRate = sampleRate;
 	SetVolume(volume);
@@ -33,9 +38,15 @@ Sound::Sound(const float volume, const float sampleRate, GeneratorType type)
  * @brief Generates the next audio sample from the sound's waveform.
  * @return Sample value multiplied by the total gain.
  */
-float Sound::GetBuffer()
+float Sound::Generate()
 {
-	return m_Generator->Generate(m_GeneratorParams) * TotalGain();
+	float sample = m_Generator->Generate(m_GeneratorParams);
+
+	const float deltaTime = 1.0f / m_SampleRate;
+	for (const auto& audioEffect : m_Effects)
+		sample = audioEffect->Process(sample, deltaTime);
+
+	return sample * TotalGain();
 }
 
 /**
@@ -207,10 +218,18 @@ GeneratorType Sound::GetGeneratorType() const
 void Sound::SetAudioLength(const Duration length)
 {
 	m_AudioLength = length;
+
+	for (const std::unique_ptr<AudioEffect>& effect : m_Effects)
+		effect->OnAudioLengthChanged(m_AudioLength);
 }
 
 Duration Sound::GetAudioLength() const
 {
 	return m_AudioLength;
+}
+
+std::vector<std::unique_ptr<AudioEffect>>& Sound::GetEffects()
+{
+	return m_Effects;
 }
 }

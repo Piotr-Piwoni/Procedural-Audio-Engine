@@ -4,6 +4,7 @@
 #include <random>
 #include <thread>
 
+#include "core/audio/effects/FadeEffect.hpp"
 #include "IMGUI/imgui.h"
 #include "ImGUI/imgui_internal.h"
 #include "ui/imgui-knobs.h"
@@ -60,7 +61,7 @@ void MT::Application::Update()
 	{
 		float mixedSample = 0.f;
 		for (auto& sound : m_Sounds)
-			mixedSample += sound.GetBuffer();
+			mixedSample += sound.Generate();
 
 		mixedSample *= m_MasterVolume;
 		mixedSample = std::clamp(mixedSample, -1.f, 1.f);
@@ -251,7 +252,7 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 		sound.IsMuted() ? sound.UnMute() : sound.Mute();
 
 
-	// Volume Slider.
+	// Volume slider.
 	RenderSlider("Volume", index, sound.GetVolume(), 0.f, 1.f,
 				 [&](const float v) { sound.SetVolume(v); });
 
@@ -292,12 +293,12 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 	}
 
 
-	// Decibel Knob.
+	// Decibel knob.
 	RenderKnob("dB Offset", index, sound.GetDBLevel(), -100.f, 100.f, 1.f,
 			   [&](const float db) { sound.SetDBLevel(db); }, "%.1f dB");
 
 
-	// Pitch Knob.
+	// Pitch knob.
 	ImGui::SameLine(90.f);
 	if (sound.GetGeneratorType() != GeneratorType::NOISE)
 	{
@@ -307,6 +308,30 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 					   sound.SetPitchMultiplier(p);
 				   },
 				   "%0.1f");
+	}
+
+
+	// Effects menu.
+	if (ImGui::BeginMenu(MakeLabel("Add Effect", index).c_str()))
+	{
+		if (ImGui::MenuItem(MakeLabel("Fade Fx", index).c_str()))
+			sound.AddEffect<FadeEffect>();
+
+		ImGui::EndMenu();
+	}
+
+	// Effects UI.
+	std::vector<std::unique_ptr<AudioEffect>>& effects = sound.GetEffects();
+	for (size_t i = 0; i < effects.size();)
+	{
+		ImGui::PushID(i);
+		const bool remove = !effects[i]->RenderUI();
+		ImGui::PopID();
+
+		if (remove)
+			effects.erase(effects.begin() + i);
+		else
+			i++;
 	}
 }
 

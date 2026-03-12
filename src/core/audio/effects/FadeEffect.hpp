@@ -18,7 +18,7 @@ public:
 		m_FadeOutPoint{outPointSeconds},
 		m_AudioLength{audioLengthSeconds} {}
 
-	float Generate(const float sample, const float deltaTime) override
+	float Process(const float sample, const float deltaTime) override
 	{
 		m_Time += Duration(deltaTime);
 
@@ -40,6 +40,33 @@ public:
 	}
 
 	void Reset() override { m_Time = Duration::zero(); }
+
+	bool RenderUI() override
+	{
+		ImGui::Text("Fade Effect");
+		ImGui::SameLine();
+
+		if (ImGui::Button("X"))
+			return false;
+
+		float inPoint = m_FadeInPoint.count();
+		if (ImGui::DragFloat("Fade Start (seconds)", &inPoint, 1.f, 0.f,
+							 m_AudioLength.count(), "%0.3f",
+							 ImGuiSliderFlags_AlwaysClamp))
+		{
+			SetFadeInPoint(inPoint);
+		}
+
+		float outPoint = m_FadeOutPoint.count();
+		if (ImGui::DragFloat("Fade Out (seconds)", &outPoint, 1.f, 0.f,
+							 m_AudioLength.count(), "%0.3f",
+							 ImGuiSliderFlags_AlwaysClamp))
+		{
+			SetFadeOutPoint(outPoint);
+		}
+
+		return true;
+	}
 
 
 	void SetFadeInPoint(const float timeStamp)
@@ -65,7 +92,10 @@ public:
 
 	[[nodiscard]] Duration GetFadeOutPoint() const { return m_FadeOutPoint; }
 
-	void SetAudioLength(const Duration length) { m_AudioLength = length; }
+	void OnAudioLengthChanged(const Duration length) override
+	{
+		m_AudioLength = length;
+	}
 
 private:
 	Duration m_FadeInPoint{0.f};
