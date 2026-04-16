@@ -5,6 +5,7 @@
 
 #include "../../Utilities/TypeDefinitions.hpp"
 #include "effects/AudioEffect.hpp"
+#include "effects/Modulator.hpp"
 #include "generators/GeneratorParams.hpp"
 #include "generators/GeneratorType.hpp"
 #include "generators/SoundGenerator.hpp"
@@ -62,6 +63,10 @@ public:
 	template<typename T>
 	[[nodiscard]] bool HasEffect();
 
+	void AddModulator(const Modulator& mod);
+	[[nodiscard]] Modulator* GetModulator(ModulatorTarget modTarget) const;
+	[[nodiscard]] std::vector<std::unique_ptr<Modulator>>& GetModulators();
+
 private:
 	float m_Volume{0.f};
 	float m_DBLevel{0.f};
@@ -74,6 +79,7 @@ private:
 	GeneratorType m_Type{GeneratorType::NONE};
 	Duration m_AudioLength{0.f};
 	std::vector<std::unique_ptr<AudioEffect>> m_Effects{};
+	std::vector<std::unique_ptr<Modulator>> m_Modulators{};
 	float m_DeltaTime{0.f};
 };
 

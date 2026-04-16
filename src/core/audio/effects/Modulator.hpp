@@ -9,6 +9,21 @@ namespace MT::Core::Audio
 class Modulator
 {
 public:
+	explicit Modulator(
+			const ModulatorTarget target = ModulatorTarget::FREQUENCY,
+			const ModulatorWave wave = ModulatorWave::SINE,
+			const float frequency = 5.f, const float depth = 0.1f) :
+		m_Frequency{frequency}, m_Depth{depth}, m_Target{target},
+		m_WaveType{wave} {}
+
+	Modulator(const Modulator& mod) : Modulator{
+		mod.GetTarget(),
+		mod.GetWaveType(),
+		mod.GetFrequency(),
+		mod.GetDepth()
+	} {}
+
+
 	float Process(const float deltaTime)
 	{
 		m_Phase += m_Frequency * deltaTime;
@@ -23,7 +38,6 @@ public:
 				break;
 			}
 		}
-
 
 		return wave * m_Depth;
 	}

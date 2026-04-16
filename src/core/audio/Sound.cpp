@@ -38,12 +38,48 @@ Sound::Sound(const float volume, const unsigned long sampleRate,
  */
 float Sound::Generate()
 {
+	float frequency = m_Frequency;
+	float pitchMult = m_PitchMultiplier;
+	float volume = m_Volume;
+	float db = m_DBLevel;
+
+	// Apply modulators.
+	for (const auto& modulator : m_Modulators)
+	{
+		const auto modSample = modulator->Process(m_DeltaTime);
+		switch (modulator->GetTarget())
+		{
+		case ModulatorTarget::FREQUENCY:
+			{
+				frequency *= 1.f + modSample;
+				m_Generator->UpdatePhaseIncrement(frequency, m_SampleRate);
+				break;
+			}
+		case ModulatorTarget::PITCH:
+			{
+				pitchMult *= 1.f + modSample;
+				SetPitchMultiplier(pitchMult);
+				break;
+			}
+		case ModulatorTarget::AMPLITUDE_GAIN:
+			{
+				volume *= 1.f + modSample;
+				break;
+			}
+		case ModulatorTarget::AMPLITUDE_DECIBEL:
+			{
+				db += modSample;
+				break;
+			}
+		}
+	}
+
 	float sample = m_Generator->Generate(m_GeneratorParams);
 
 	for (const auto& audioEffect : m_Effects)
 		sample = audioEffect->Process(sample, m_DeltaTime);
 
-	return sample * TotalGain();
+	return sample * (m_IsMuted ? 0.f : volume) * Utilities::AsGain(db);
 }
 
 /**
@@ -246,5 +282,27 @@ Duration Sound::GetAudioLength() const
 std::vector<std::unique_ptr<AudioEffect>>& Sound::GetEffects()
 {
 	return m_Effects;
+}
+
+void Sound::AddModulator(const Modulator& mod)
+{
+	// Prevent duplicate modulators.
+	if (GetModulator(mod.GetTarget()) != nullptr) return;
+	m_Modulators.push_back(std::move(std::make_unique<Modulator>(mod)));
+}
+
+Modulator* Sound::GetModulator(const ModulatorTarget modTarget) const
+{
+	for (const auto& modulator : m_Modulators)
+		if (modulator->GetTarget() == modTarget)
+			return modulator.get();
+
+	std::print("Chosen modulator could not be found!");
+	return nullptr;
+}
+
+std::vector<std::unique_ptr<Modulator>>& Sound::GetModulators()
+{
+	return m_Modulators;
 }
 }
