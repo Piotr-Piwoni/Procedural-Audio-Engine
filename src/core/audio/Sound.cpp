@@ -234,7 +234,7 @@ void Sound::SetAudioLength(const Duration length)
 {
 	m_AudioLength = length;
 
-	for (const std::unique_ptr<AudioEffect>& effect : m_Effects)
+	for (const auto& effect : m_Effects)
 		effect->OnAudioLengthChanged(m_AudioLength);
 }
 

@@ -79,8 +79,6 @@ void MT::Application::Update()
 			mixedSample += sound.Generate();
 
 		mixedSample *= m_MasterVolume;
-		mixedSample = std::clamp(mixedSample, -1.f, 1.f);
-
 		buffer[frame * format->nChannels + 0] = mixedSample;
 		if (format->nChannels > 1)
 			buffer[frame * format->nChannels + 1] = mixedSample;

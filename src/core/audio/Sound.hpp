@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <chrono>
 #include <memory>
+#include <print>
 
 #include "../../Utilities/TypeDefinitions.hpp"
 #include "effects/AudioEffect.hpp"
@@ -11,6 +12,9 @@
 
 namespace MT::Core::Audio
 {
+class FadeEffect;
+
+
 class Sound
 {
 public:
@@ -52,7 +56,11 @@ public:
 
 	template<typename T>
 	void AddEffect();
-	std::vector<std::unique_ptr<AudioEffect>>& GetEffects();
+	template<typename T>
+	[[nodiscard]] T* GetEffect();
+	[[nodiscard]] std::vector<std::unique_ptr<AudioEffect>>& GetEffects();
+	template<typename T>
+	[[nodiscard]] bool HasEffect();
 
 private:
 	float m_Volume{0.f};
@@ -75,8 +83,28 @@ void Sound::AddEffect()
 	static_assert(std::is_base_of_v<AudioEffect, T>,
 				  "T must derive from AudioEffect!");
 
+	// Only one fade effects per sound object.
+	if (HasEffect<FadeEffect>())return;
+
 	auto effect = std::make_unique<T>();
 	effect->OnAudioLengthChanged(m_AudioLength);
 	m_Effects.push_back(std::move(effect));
+}
+
+template<typename T>
+T* Sound::GetEffect()
+{
+	for (auto& effect : m_Effects)
+		if (auto casted = dynamic_cast<T*>(effect.get()))
+			return casted;
+
+	std::print("Chosen effect could not be found!");
+	return nullptr;
+}
+
+template<typename T>
+bool Sound::HasEffect()
+{
+	return GetEffect<T>() != nullptr;
 }
 }
