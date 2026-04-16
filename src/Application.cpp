@@ -4,12 +4,14 @@
 #include <random>
 #include <thread>
 
+#include "core/audio/effects/FadeEffect.hpp"
 #include "IMGUI/imgui.h"
 #include "ImGUI/imgui_internal.h"
 #include "ui/imgui-knobs.h"
 #include "Utilities/Utils.hpp"
 
 using namespace MT::Core::Audio;
+using namespace std::chrono_literals;
 
 MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 	m_Window(win), m_Backend{backend}
@@ -19,21 +21,35 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 
 	m_Sounds.reserve(16);
 	m_BaseFrequencies.reserve(16);
+
+	if (const WAVEFORMATEX* format = m_Backend->GetFormat())
+		m_SampleRate = format->nSamplesPerSec;
 }
+
 
 void MT::Application::Update()
 {
-	if (m_Backend->GetPlaybackState() != PlaybackState::PLAYING) return;
+	UpdateSoundLength();
 
 	const WAVEFORMATEX* format = m_Backend->GetFormat();
 	if (!format) return;
+
+	// Update sample rate if it has changed.
+	if (m_SampleRate != format->nSamplesPerSec)
+	{
+		m_SampleRate = format->nSamplesPerSec;
+		for (auto& sound : m_Sounds)
+			sound.SetSampleRate(m_SampleRate);
+	}
+
+	if (m_Backend->GetPlaybackState() != PlaybackState::PLAYING) return;
 
 	const auto [buffer, frames] = m_Backend->GetBuffer();
 	if (!buffer) return;
 
 	if (frames == 0)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		std::this_thread::sleep_for(chrono::milliseconds(1));
 		return;
 	}
 
@@ -60,11 +76,9 @@ void MT::Application::Update()
 	{
 		float mixedSample = 0.f;
 		for (auto& sound : m_Sounds)
-			mixedSample += sound.GetBuffer();
+			mixedSample += sound.Generate();
 
 		mixedSample *= m_MasterVolume;
-		mixedSample = std::clamp(mixedSample, -1.f, 1.f);
-
 		buffer[frame * format->nChannels + 0] = mixedSample;
 		if (format->nChannels > 1)
 			buffer[frame * format->nChannels + 1] = mixedSample;
@@ -96,10 +110,9 @@ void MT::Application::Render()
 			ImGui::Indent();
 			float audioLength = m_AudioLength.count();
 			if (ImGui::DragFloat("Audio Length (seconds)", &audioLength, 1.f,
-								 0.f,
-								 FLT_MAX, "%0.3f",
+								 0.f,FLT_MAX, "%0.3f",
 								 ImGuiSliderFlags_AlwaysClamp))
-				m_AudioLength = std::chrono::duration<float>(audioLength);
+				m_AudioLength = Duration(audioLength);
 			ImGui::Unindent();
 		}
 
@@ -114,9 +127,9 @@ void MT::Application::Render()
 		constexpr ImVec2 buttonSize = {200.f, 25.f};
 		if (ImGui::Button("Add Sound", buttonSize))
 		{
-			const auto& sound = m_Sounds.emplace_back(0.25f,
-				m_Backend->GetFormat()->nSamplesPerSec);
+			auto& sound = m_Sounds.emplace_back(0.25f, m_SampleRate);
 			m_BaseFrequencies.push_back(sound.GetFrequency());
+			sound.SetAudioLength(m_AudioLength);
 		}
 
 		if (!m_Sounds.empty() && ImGui::Button("Remove Sound", buttonSize))
@@ -165,6 +178,12 @@ void MT::Application::OnKey(const int key, int scancode,
 void MT::Application::PlayAudio()
 {
 	m_FramesGenerated = 0;
+
+	// Reset all effects on the sounds.
+	for (auto& sound : m_Sounds)
+		for (const auto& effect : sound.GetEffects())
+			effect->Reset();
+
 	m_Backend->StartPlayback();
 }
 
@@ -246,7 +265,7 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 		sound.IsMuted() ? sound.UnMute() : sound.Mute();
 
 
-	// Volume Slider.
+	// Volume slider.
 	RenderSlider("Volume", index, sound.GetVolume(), 0.f, 1.f,
 				 [&](const float v) { sound.SetVolume(v); });
 
@@ -287,12 +306,12 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 	}
 
 
-	// Decibel Knob.
+	// Decibel knob.
 	RenderKnob("dB Offset", index, sound.GetDBLevel(), -100.f, 100.f, 1.f,
 			   [&](const float db) { sound.SetDBLevel(db); }, "%.1f dB");
 
 
-	// Pitch Knob.
+	// Pitch knob.
 	ImGui::SameLine(90.f);
 	if (sound.GetGeneratorType() != GeneratorType::NOISE)
 	{
@@ -302,6 +321,30 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 					   sound.SetPitchMultiplier(p);
 				   },
 				   "%0.1f");
+	}
+
+
+	// Effects menu.
+	if (ImGui::BeginMenu(MakeLabel("Add Effect", index).c_str()))
+	{
+		if (ImGui::MenuItem(MakeLabel("Fade Fx", index).c_str()))
+			sound.AddEffect<FadeEffect>();
+
+		ImGui::EndMenu();
+	}
+
+	// Effects UI.
+	std::vector<std::unique_ptr<AudioEffect>>& effects = sound.GetEffects();
+	for (int i = 0; static_cast<size_t>(i) < effects.size();)
+	{
+		ImGui::PushID(i);
+		const bool remove = !effects[i]->RenderUI();
+		ImGui::PopID();
+
+		if (remove)
+			effects.erase(effects.begin() + i);
+		else
+			i++;
 	}
 }
 
@@ -322,4 +365,17 @@ void MT::Application::CreateStartStopAudioButton()
 		m_Backend->StopPlayback();
 	else if (state == PlaybackState::STOPPED)
 		PlayAudio();
+}
+
+void MT::Application::UpdateSoundLength()
+{
+	if (m_Sounds.empty()) return;
+
+	for (auto& sound : m_Sounds)
+	{
+		if (m_IsSoundContinues)
+			sound.SetAudioLength(Duration(0.f));
+		else if (sound.GetAudioLength() != m_AudioLength)
+			sound.SetAudioLength(m_AudioLength);
+	}
 }

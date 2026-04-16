@@ -20,16 +20,16 @@ public:
 	}
 
 	void UpdatePhaseIncrement(const float frequency,
-							  const float sampleRate) override
+							  const unsigned long sampleRate) override
 	{
-		if (sampleRate < 1.f)
+		if (sampleRate < 1)
 		{
 			std::cerr << "Sample rate must be greater than 0!\n";
 			return;
 		}
 
-		m_PhaseIncrement = 2.f * std::numbers::pi_v<float> *
-						   (frequency / sampleRate);
+		m_PhaseIncrement = 2.f * std::numbers::pi_v<float> * (frequency /
+							   static_cast<float>(sampleRate));
 	}
 };
 }
