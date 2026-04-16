@@ -185,6 +185,7 @@
         <ClInclude Include="src\core\audio\AudioTypes.hpp"/>
         <ClInclude Include="src\core\audio\effects\AudioEffect.hpp"/>
         <ClInclude Include="src\core\audio\effects\FadeEffect.hpp"/>
+        <ClInclude Include="src\core\audio\effects\Modulator.hpp" />
         <ClInclude Include="src\core\audio\generators\GeneratorParams.hpp"/>
         <ClInclude Include="src\core\audio\generators\GeneratorType.hpp"/>
         <ClInclude Include="src\core\audio\generators\SawGenerator.hpp"/>
@@ -590,6 +591,7 @@
     </ItemGroup>
     <ItemGroup>
         <Content Include="imgui.ini"/>
+        <Content Include="src\core\audio\effects\ModulatorTypes.hpp" />
         <Content Include="third-party\Eigen\AccelerateSupport"/>
         <Content Include="third-party\Eigen\Cholesky"/>
         <Content Include="third-party\Eigen\CholmodSupport"/>
