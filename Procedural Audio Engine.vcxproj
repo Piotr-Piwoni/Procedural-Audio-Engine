@@ -11,6 +11,7 @@
         </ProjectConfiguration>
     </ItemGroup>
     <ItemGroup>
+        <ClCompile Include="src\core\AudioEngine.cpp"/>
         <ClCompile Include="src\DemoApplication.cpp">
             <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
             <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -180,6 +181,7 @@
         <Folder Include="assets\"/>
     </ItemGroup>
     <ItemGroup>
+        <ClInclude Include="src\core\AudioEngine.hpp"/>
         <ClInclude Include="src\DemoApplication.hpp"/>
         <ClInclude Include="src\core\audio\AudioBackend.hpp"/>
         <ClInclude Include="src\core\audio\AudioTypes.hpp"/>

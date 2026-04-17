@@ -63,6 +63,11 @@ class Sound
 public:
 	explicit Sound(float volume = 1.f, unsigned long sampleRate = 1,
 				   GeneratorType type = GeneratorType::SINE);
+	Sound(const Sound&) = delete;
+	Sound& operator=(const Sound&) = delete;
+
+	Sound(Sound&&) noexcept = default;
+	Sound& operator=(Sound&&) noexcept = default;
 
 
 	[[nodiscard]] float Generate();

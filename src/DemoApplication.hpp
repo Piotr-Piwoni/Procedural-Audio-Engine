@@ -1,8 +1,6 @@
 ﻿#pragma once
-#include <vector>
-
 #include "chrono"
-#include "core/audio/AudioBackend.hpp"
+#include "core/AudioEngine.hpp"
 #include "core/audio/Sound.hpp"
 #include "GLFW/glfw3.h"
 #include "Utilities/TypeDefinitions.hpp"
@@ -14,7 +12,7 @@ namespace MT
 class DemoApplication
 {
 public:
-	DemoApplication(GLFWwindow* win, Core::Audio::AudioBackend* backend);
+	DemoApplication(GLFWwindow* win);
 
 	void Update();
 	void Render();
@@ -22,17 +20,8 @@ public:
 private:
 	void OnKey(int key, int scancode, int action, int mods);
 
-	/// <summary> GLFW static callback to key press detection. </summary>
-	static void KeyCallback(GLFWwindow* window, const int key,
-							const int scancode, const int action,
-							const int mods)
-	{
-		auto app = static_cast<DemoApplication*>(glfwGetWindowUserPointer(window));
-		if (app)
-			app->OnKey(key, scancode, action, mods);
-	}
-
-	void PlayAudio();
+	static void KeyCallback(GLFWwindow* window, int key, int scancode,
+							int action, int mods);
 
 	static std::string MakeLabel(const std::string& name, size_t index);
 
@@ -44,21 +33,12 @@ private:
 					T max, T step, Fn setter, const char* fmt = "%0.3f");
 
 	void RenderSoundSettings(Core::Audio::Sound& sound, size_t index);
-	void CreateStartStopAudioButton();
-	bool RenderEffectUI(Core::Audio::AudioEffect* effect);
+	void CreateStartStopAudioButton() const;
+	bool RenderEffectUI(Core::Audio::AudioEffect* effect) const;
 	bool RenderModulatorUI(Core::Audio::Modulator& modulator);
-
-	void UpdateSoundLength();
 
 private:
 	GLFWwindow* m_Window{nullptr};
-	Core::Audio::AudioBackend* m_Backend{nullptr};
-
-	float m_MasterVolume{1.f};
-	std::vector<Core::Audio::Sound> m_Sounds{};
-	uint32_t m_FramesGenerated{0};
-	Duration m_AudioLength{5.f};
-	bool m_IsSoundContinues{false};
-	unsigned long m_SampleRate{0};
+	std::unique_ptr<Core::AudioEngine> m_Engine{nullptr};
 };
 }

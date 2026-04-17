@@ -9,31 +9,10 @@
 int main()
 {
 	const MT::Core::Window window(1280, 720, "Musical Trunk - PAE");
-	if (!window.Ptr)
-		return EXIT_FAILURE;
-
-
-	MT::Core::Audio::AudioBackend backend;
-	const MT::Core::Audio::BackendError result = backend.Create(
-			COINIT_MULTITHREADED);
-
-	if (result != MT::Core::Audio::BackendError::NONE)
-	{
-		std::println("Audio backend failed to be created, the reason {} error!",
-					 to_string(result));
-		return EXIT_FAILURE;
-	}
-
-	// Output some information about the format.
-	if (const auto format = backend.GetFormat())
-		std::println("Channels: {}\nSampleRate: {}\nBits per sample: {}",
-					 format->nChannels, format->nSamplesPerSec,
-					 format->wBitsPerSample);
-
+	if (!window.Ptr) return EXIT_FAILURE;
 
 	MT::Core::ImGuiLayer imGuiLayer(window.Ptr.get());
-	const auto app = std::make_unique<MT::DemoApplication>(
-			window.Ptr.get(), &backend);
+	const auto app = std::make_unique<MT::DemoApplication>(window.Ptr.get());
 
 	while (!window.ShouldClose())
 	{

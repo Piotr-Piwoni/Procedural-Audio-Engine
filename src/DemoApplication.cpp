@@ -1,6 +1,5 @@
 ﻿#include "DemoApplication.hpp"
 
-#include <print>
 #include <random>
 #include <thread>
 
@@ -13,75 +12,22 @@
 using namespace MT::Core::Audio;
 using namespace std::chrono_literals;
 
-MT::DemoApplication::DemoApplication(GLFWwindow* win, AudioBackend* backend) :
-	m_Window(win), m_Backend{backend}
+
+MT::DemoApplication::DemoApplication(GLFWwindow* win) :
+	m_Window(win)
 {
 	glfwSetWindowUserPointer(m_Window, this);
 	glfwSetKeyCallback(m_Window, KeyCallback);
 
-	m_Sounds.reserve(16);
-
-	if (const WAVEFORMATEX* format = m_Backend->GetFormat())
-		m_SampleRate = format->nSamplesPerSec;
+	// In this demo, is the Audio Engine fails to initialise for any reason,
+	// the application will immediately close.
+	m_Engine = std::make_unique<Core::AudioEngine>();
+	if (!m_Engine->Init())
+		glfwSetWindowShouldClose(m_Window, true);
 }
 
 
-void MT::DemoApplication::Update()
-{
-	UpdateSoundLength();
-
-	const WAVEFORMATEX* format = m_Backend->GetFormat();
-	if (!format) return;
-
-	// Update sample rate if it has changed.
-	if (m_SampleRate != format->nSamplesPerSec)
-	{
-		m_SampleRate = format->nSamplesPerSec;
-		for (auto& sound : m_Sounds)
-			sound.SetSampleRate(m_SampleRate);
-	}
-
-	if (m_Backend->GetPlaybackState() != PlaybackState::PLAYING) return;
-
-	const auto [buffer, frames] = m_Backend->GetBuffer();
-	if (!buffer) return;
-
-	if (frames == 0)
-	{
-		std::this_thread::sleep_for(chrono::milliseconds(1));
-		return;
-	}
-
-	const auto maxFrames = static_cast<uint64_t>(
-		static_cast<float>(format->nSamplesPerSec) * m_AudioLength.count());
-
-	if (!m_IsSoundContinues && m_FramesGenerated >= maxFrames)
-	{
-		m_Backend->ReleaseBuffer(frames);
-		m_Backend->StopPlayback();
-		return;
-	}
-
-	uint32_t framesToWrite = frames;
-	if (!m_IsSoundContinues && m_FramesGenerated + frames > maxFrames)
-		framesToWrite = static_cast<uint32_t>(maxFrames - m_FramesGenerated);
-
-	// Generate noise.
-	for (uint32_t frame = 0; frame < framesToWrite; frame++)
-	{
-		float mixedSample = 0.f;
-		for (auto& sound : m_Sounds)
-			mixedSample += sound.Generate();
-
-		mixedSample *= m_MasterVolume;
-		buffer[frame * format->nChannels + 0] = mixedSample;
-		if (format->nChannels > 1)
-			buffer[frame * format->nChannels + 1] = mixedSample;
-	}
-
-	if (!m_IsSoundContinues) m_FramesGenerated += framesToWrite;
-	m_Backend->ReleaseBuffer(frames);
-}
+void MT::DemoApplication::Update() { m_Engine->Update(); }
 
 void MT::DemoApplication::Render()
 {
@@ -96,86 +42,71 @@ void MT::DemoApplication::Render()
 					 ImGuiWindowFlags_NoMove))
 	{
 		ImGui::Text("Sound Settings");
-		ImGui::SliderFloat("Master Volume", &m_MasterVolume, 0.f, 1.f);
-		ImGui::Checkbox("Is Audio Continues", &m_IsSoundContinues);
+
+		float volume = m_Engine->GetVolume();
+		if (ImGui::SliderFloat("Master Volume", &volume, 0.f, 1.f, "%.3f",
+							   ImGuiSliderFlags_AlwaysClamp))
+			m_Engine->SetVolume(volume);
+
+		bool isContinues = m_Engine->AreSoundsContinues();
+		if (ImGui::Checkbox("Is Audio Continues", &isContinues))
+			m_Engine->SetSoundsContinues(isContinues);
 
 		// Render field only if the user wants to have a set audio length.
-		if (!m_IsSoundContinues)
+		if (!m_Engine->AreSoundsContinues())
 		{
 			ImGui::Indent();
-			float audioLength = m_AudioLength.count();
+			float audioLength = m_Engine->GetAudioLength().count();
 			if (ImGui::DragFloat("Audio Length (seconds)", &audioLength, 1.f,
 								 0.f,FLT_MAX, "%0.3f",
 								 ImGuiSliderFlags_AlwaysClamp))
-				m_AudioLength = Duration(audioLength);
+				m_Engine->SetAudioLength(Duration(audioLength));
 			ImGui::Unindent();
 		}
 
 		CreateStartStopAudioButton();
 
 		ImGui::Dummy({0.f, 15.f}); //< Spacer.
-		for (size_t i = 0; i < m_Sounds.size(); i++)
-			RenderSoundSettings(m_Sounds[i], i);
+		std::deque<Sound>& sounds = m_Engine->GetSounds();
+		for (size_t i = 0; i < sounds.size(); i++)
+			RenderSoundSettings(sounds[i], i);
 
 		// Buttons for adding and removing sounds.
 		ImGui::Dummy({0.f, 10.f}); //< Spacer.
 		constexpr ImVec2 buttonSize = {200.f, 25.f};
 		if (ImGui::Button("Add Sound", buttonSize))
-		{
-			auto& sound = m_Sounds.emplace_back(0.25f, m_SampleRate);
-			sound.SetAudioLength(m_AudioLength);
-		}
+			m_Engine->CreateSound(0.25f);
 
-		if (!m_Sounds.empty() && ImGui::Button("Remove Sound", buttonSize))
-			m_Sounds.pop_back();
+		if (m_Engine->HasSounds() && ImGui::Button("Remove Sound", buttonSize))
+			m_Engine->RemoveSound();
 	}
 	ImGui::End();
 }
 
 
 void MT::DemoApplication::OnKey(const int key, int scancode,
-								const int action,
-								int mods)
+								const int action, int mods)
 {
-	if (action != GLFW_PRESS)
-		return;
+	if (action != GLFW_PRESS) return;
 
 	// Close application when the Escape key is pressed.
-	if (key == GLFW_KEY_ESCAPE)
-		glfwSetWindowShouldClose(m_Window, true);
+	if (key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(m_Window, true);
 
 	// If there are sounds, allow playback controls.
-	if (!m_Sounds.empty())
+	if (m_Engine->HasSounds())
 	{
-		if (key == GLFW_KEY_P)
-		{
-			const auto state = m_Backend->GetPlaybackState();
-			if (state == PlaybackState::PLAYING)
-				m_Backend->PausePlayback();
-			else if (state == PlaybackState::PAUSED)
-				m_Backend->ResumePlayback();
-		}
-		if (key == GLFW_KEY_K)
-		{
-			const auto state = m_Backend->GetPlaybackState();
-			if (state == PlaybackState::PLAYING)
-				m_Backend->StopPlayback();
-			else if (state == PlaybackState::STOPPED)
-				PlayAudio();
-		}
+		if (key == GLFW_KEY_P) m_Engine->TogglePause();
+		if (key == GLFW_KEY_K) m_Engine->TogglePlayback();
 	}
 }
 
-void MT::DemoApplication::PlayAudio()
+/// <summary> GLFW static callback to key press detection. </summary>
+void MT::DemoApplication::KeyCallback(GLFWwindow* window, const int key,
+									  const int scancode, const int action,
+									  const int mods)
 {
-	m_FramesGenerated = 0;
-
-	// Reset all effects on the sounds.
-	for (auto& sound : m_Sounds)
-		for (const auto& effect : sound.GetEffects())
-			effect->Reset();
-
-	m_Backend->StartPlayback();
+	auto app = static_cast<DemoApplication*>(glfwGetWindowUserPointer(window));
+	if (app) app->OnKey(key, scancode, action, mods);
 }
 
 /**
@@ -351,26 +282,21 @@ void MT::DemoApplication::RenderSoundSettings(Sound& sound, const size_t index)
 	}
 }
 
-void MT::DemoApplication::CreateStartStopAudioButton()
+void MT::DemoApplication::CreateStartStopAudioButton() const
 {
-	const auto state = m_Backend->GetPlaybackState();
+	const auto state = m_Engine->GetState();
 	std::string startStopBtnLabel;
-	if (state == PlaybackState::PLAYING)
-		startStopBtnLabel = "Stop";
-	else if (state == PlaybackState::STOPPED)
-		startStopBtnLabel = "Start";
+	if (state == PlaybackState::PLAYING) startStopBtnLabel = "Stop";
+	else if (state == PlaybackState::STOPPED) startStopBtnLabel = "Start";
 
-	if (!ImGui::Button(startStopBtnLabel.c_str(), {100.f, 25.f}) ||
-		m_Sounds.empty())
+	if (!ImGui::Button(startStopBtnLabel.c_str(), {100.f, 25.f}) |
+		!m_Engine->HasSounds())
 		return;
 
-	if (state == PlaybackState::PLAYING)
-		m_Backend->StopPlayback();
-	else if (state == PlaybackState::STOPPED)
-		PlayAudio();
+	m_Engine->TogglePlayback();
 }
 
-bool MT::DemoApplication::RenderEffectUI(AudioEffect* effect)
+bool MT::DemoApplication::RenderEffectUI(AudioEffect* effect) const
 {
 	ImGui::PushID(effect);
 
@@ -388,19 +314,18 @@ bool MT::DemoApplication::RenderEffectUI(AudioEffect* effect)
 			}
 
 			float inPoint = fadeEffect->GetFadeInPoint().count();
-			const float max = m_AudioLength.count() > 0.f
-							  ? m_AudioLength.count()
-							  : FLT_MAX;
+			const float length = m_Engine->GetAudioLength().count();
+			const float max = length > 0.f ? length : FLT_MAX;
 			if (ImGui::DragFloat("Fade Start (seconds)", &inPoint, 1.f, 0.f,
 								 max, "%0.3f", ImGuiSliderFlags_AlwaysClamp))
 				fadeEffect->SetFadeInPoint(inPoint);
 
-			if (m_AudioLength.count() > 0.f)
+			if (length > 0.f)
 			{
 				ImGui::SameLine();
 				float outPoint = fadeEffect->GetFadeOutPoint().count();
 				if (ImGui::DragFloat("Fade Out (seconds)", &outPoint, 1.f, 0.f,
-									 m_AudioLength.count(), "%0.3f",
+									 length, "%0.3f",
 									 ImGuiSliderFlags_AlwaysClamp))
 					fadeEffect->SetFadeOutPoint(outPoint);
 			}
@@ -486,17 +411,4 @@ bool MT::DemoApplication::RenderModulatorUI(Modulator& modulator)
 
 	ImGui::PopID();
 	return true;
-}
-
-void MT::DemoApplication::UpdateSoundLength()
-{
-	if (m_Sounds.empty()) return;
-
-	for (auto& sound : m_Sounds)
-	{
-		if (m_IsSoundContinues)
-			sound.SetAudioLength(Duration(0.f));
-		else if (sound.GetAudioLength() != m_AudioLength)
-			sound.SetAudioLength(m_AudioLength);
-	}
 }
