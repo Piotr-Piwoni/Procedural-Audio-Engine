@@ -28,9 +28,19 @@ MT::DemoApplication::DemoApplication(GLFWwindow* win) :
 		glfwSetWindowShouldClose(m_Window, true);
 }
 
-
+/**
+ * @brief Updates the demo application logic.
+ *
+ * Delegates update processing to the underlying AudioEngine.
+ */
 void MT::DemoApplication::Update() { m_Engine->Update(); }
 
+/**
+ * @brief Renders the main ImGui interface for the demo application.
+ *
+ * Displays global audio controls (volume, playback mode, length),
+ * manages sound creation/removal, and renders per-sound settings UI.
+ */
 void MT::DemoApplication::Render()
 {
 	const ImVec2 size = ImGui::GetMainViewport()->Size;
@@ -85,7 +95,18 @@ void MT::DemoApplication::Render()
 	ImGui::End();
 }
 
-
+/**
+ * @brief Handles key input events.
+ * @param key GLFW key code.
+ * @param scancode Platform-specific scan code.
+ * @param action Key action (press/release).
+ * @param mods Modifier keys.
+ *
+ * Provides quick controls:
+ * - Escape: closes the application.
+ * - P: toggles pause.
+ * - K: toggles playback.
+ */
 void MT::DemoApplication::OnKey(const int key, int scancode,
 								const int action, int mods)
 {
@@ -170,11 +191,16 @@ void MT::DemoApplication::RenderKnob(const std::string& name, size_t index,
 }
 
 /**
- * @brief Renders the ImGui UI for editing the properties of a Sound object.
- * @param sound Sound object to render controls for.
- * @param index Index of the sound in a list, used for unique widget labels.
+ * @brief Renders UI controls for a Sound object.
+ * @param sound Sound instance to modify.
+ * @param index Index used for unique ImGui widget IDs.
  *
- * Renders mute/unmute button, volume slider, decibel offset knob, and pitch multiplier knob.
+ * Allows editing of:
+ * - Mute state and volume.
+ * - Generator type and frequency.
+ * - Pitch and decibel offset.
+ * - Generator-specific parameters (e.g. noise seed, pulse width).
+ * - Effects and modulators, including creation and removal.
  */
 void MT::DemoApplication::RenderSoundSettings(Sound& sound, const size_t index)
 {
@@ -305,6 +331,12 @@ void MT::DemoApplication::RenderSoundSettings(Sound& sound, const size_t index)
 	}
 }
 
+/**
+ * @brief Renders the start/stop playback button.
+ *
+ * Displays a button based on the current playback state and toggles
+ * playback when pressed. Disabled if no sounds exist.
+ */
 void MT::DemoApplication::CreateStartStopAudioButton() const
 {
 	const auto state = m_Engine->GetState();
@@ -312,13 +344,21 @@ void MT::DemoApplication::CreateStartStopAudioButton() const
 	if (state == PlaybackState::PLAYING) startStopBtnLabel = "Stop";
 	else if (state == PlaybackState::STOPPED) startStopBtnLabel = "Start";
 
-	if (!ImGui::Button(startStopBtnLabel.c_str(), {100.f, 25.f}) |
+	if (!ImGui::Button(startStopBtnLabel.c_str(), {100.f, 25.f}) ||
 		!m_Engine->HasSounds())
 		return;
 
 	m_Engine->TogglePlayback();
 }
 
+/**
+ * @brief Renders UI for a specific audio effect.
+ * @param effect Pointer to the effect instance.
+ * @return False if the effect should be removed, true otherwise.
+ *
+ * Currently, supports FadeEffect controls. Provides basic editing
+ * and removal functionality for demo purposes.
+ */
 bool MT::DemoApplication::RenderEffectUI(AudioEffect* effect) const
 {
 	ImGui::PushID(effect);
@@ -360,6 +400,17 @@ bool MT::DemoApplication::RenderEffectUI(AudioEffect* effect) const
 	return true;
 }
 
+/**
+ * @brief Renders UI for a modulator.
+ * @param modulator Modulator instance to edit.
+ * @return False if the modulator should be removed, true otherwise.
+ *
+ * Allows editing of:
+ * - Target parameter.
+ * - Frequency.
+ * - Wave type.
+ * - Depth.
+ */
 bool MT::DemoApplication::RenderModulatorUI(Modulator& modulator)
 {
 	ImGui::PushID(&modulator);
