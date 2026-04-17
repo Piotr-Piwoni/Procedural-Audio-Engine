@@ -20,7 +20,6 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 	glfwSetKeyCallback(m_Window, KeyCallback);
 
 	m_Sounds.reserve(16);
-	m_BaseFrequencies.reserve(16);
 
 	if (const WAVEFORMATEX* format = m_Backend->GetFormat())
 		m_SampleRate = format->nSamplesPerSec;
@@ -62,10 +61,6 @@ void MT::Application::Update()
 		m_Backend->StopPlayback();
 		return;
 	}
-
-	for (size_t i = 0; i < m_Sounds.size(); i++)
-		m_Sounds[i].SetFrequency(m_BaseFrequencies[i] *
-								 m_Sounds[i].GetPitchMultiplier());
 
 	uint32_t framesToWrite = frames;
 	if (!m_IsSoundContinues && m_FramesGenerated + frames > maxFrames)
@@ -128,15 +123,11 @@ void MT::Application::Render()
 		if (ImGui::Button("Add Sound", buttonSize))
 		{
 			auto& sound = m_Sounds.emplace_back(0.25f, m_SampleRate);
-			m_BaseFrequencies.push_back(sound.GetFrequency());
 			sound.SetAudioLength(m_AudioLength);
 		}
 
 		if (!m_Sounds.empty() && ImGui::Button("Remove Sound", buttonSize))
-		{
-			m_BaseFrequencies.pop_back();
 			m_Sounds.pop_back();
-		}
 	}
 	ImGui::End();
 }
@@ -298,11 +289,11 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 	// Frequency.
 	if (sound.GetGeneratorType() != GeneratorType::NOISE)
 	{
-		float frequency = m_BaseFrequencies[index];
+		float frequency = sound.GetBaseFrequency();
 		if (ImGui::DragFloat(MakeLabel("Hz", index).c_str(), &frequency, 1.f,
 							 1.f, FLT_MAX, "%0.3f",
 							 ImGuiSliderFlags_AlwaysClamp))
-			m_BaseFrequencies[index] = frequency;
+			sound.SetBaseFrequency(frequency);
 	}
 
 
@@ -329,6 +320,8 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 	{
 		if (ImGui::MenuItem(MakeLabel("Fade Fx", index).c_str()))
 			sound.AddEffect<FadeEffect>();
+		if (ImGui::MenuItem(MakeLabel("Modulator", index).c_str()))
+			sound.AddModulator(Modulator());
 
 		ImGui::EndMenu();
 	}
@@ -341,10 +334,20 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 		const bool remove = !effects[i]->RenderUI();
 		ImGui::PopID();
 
-		if (remove)
-			effects.erase(effects.begin() + i);
-		else
-			i++;
+		if (remove) effects.erase(effects.begin() + i);
+		else i++;
+	}
+
+	// Modulator UI.
+	std::vector<std::unique_ptr<Modulator>>& modulators = sound.GetModulators();
+	for (int i = 0; static_cast<size_t>(i) < modulators.size();)
+	{
+		ImGui::PushID(i);
+		const bool remove = !RenderModulatorUI(*modulators[i]);
+		ImGui::PopID();
+
+		if (remove) modulators.erase(modulators.begin() + i);
+		else i++;
 	}
 }
 
@@ -365,6 +368,82 @@ void MT::Application::CreateStartStopAudioButton()
 		m_Backend->StopPlayback();
 	else if (state == PlaybackState::STOPPED)
 		PlayAudio();
+}
+
+bool MT::Application::RenderModulatorUI(Modulator& modulator)
+{
+	ImGui::PushID(&modulator);
+
+	if (ImGui::CollapsingHeader("Modulator"))
+	{
+		if (ImGui::Button("X"))
+		{
+			ImGui::PopID();
+			return false;
+		}
+
+		// Arrays for combo.
+		static constexpr ModulatorTarget MODULATOR_TARGET[] = {
+			ModulatorTarget::FREQUENCY,
+			ModulatorTarget::PITCH,
+			ModulatorTarget::AMPLITUDE_GAIN,
+			ModulatorTarget::AMPLITUDE_DECIBEL
+		};
+		static const char* modTargetNames[] = {
+			"Frequency",
+			"Pitch",
+			"Amplitude Gain",
+			"Amplitude Decibel"
+		};
+
+		// Modulator Target Combo.
+		int selectedTargetIndex = 0;
+		for (size_t i = 0; i < std::size(MODULATOR_TARGET); i++)
+			if (modulator.GetTarget() == MODULATOR_TARGET[i])
+				selectedTargetIndex = static_cast<int>(i);
+
+		if (ImGui::Combo("Target", &selectedTargetIndex, modTargetNames,
+						 std::size(MODULATOR_TARGET)))
+			modulator.SetTarget(MODULATOR_TARGET[selectedTargetIndex]);
+
+		ImGui::SameLine(300.f);
+
+
+		float frequency = modulator.GetFrequency();
+		if (ImGui::DragFloat("Frequency", &frequency, 1.f, 0.f, FLT_MAX,
+							 "%0.3f", ImGuiSliderFlags_AlwaysClamp))
+			modulator.SetFrequency(frequency);
+
+
+		// Arrays for combo.
+		static constexpr ModulatorWave MODULATOR_WAVE[] = {
+			ModulatorWave::SINE,
+		};
+		static const char* modWaveNames[] = {
+			"Sine",
+		};
+
+		// Modulator Wave Combo.
+		int selectedWaveIndex = 0;
+		for (size_t i = 0; i < std::size(MODULATOR_WAVE); i++)
+			if (modulator.GetWaveType() == MODULATOR_WAVE[i])
+				selectedWaveIndex = static_cast<int>(i);
+
+		if (ImGui::Combo("Wave", &selectedWaveIndex, modWaveNames,
+						 std::size(MODULATOR_WAVE)))
+			modulator.SetWaveType(MODULATOR_WAVE[selectedWaveIndex]);
+
+
+		ImGui::SameLine(300.f);
+
+		float depth = modulator.GetDepth();
+		if (ImGui::DragFloat("Depth", &depth, 0.01f, 0.f, FLT_MAX,
+							 "%0.3f", ImGuiSliderFlags_AlwaysClamp))
+			modulator.SetDepth(depth);
+	}
+
+	ImGui::PopID();
+	return true;
 }
 
 void MT::Application::UpdateSoundLength()

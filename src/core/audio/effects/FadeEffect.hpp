@@ -55,6 +55,7 @@ public:
 			if (ImGui::Button("X"))
 			{
 				Reset();
+				ImGui::PopID();
 				return false;
 			}
 
