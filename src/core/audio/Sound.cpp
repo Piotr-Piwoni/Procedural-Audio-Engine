@@ -35,7 +35,12 @@ Sound::Sound(const float volume, const unsigned long sampleRate,
 
 /**
  * @brief Generates the next audio sample from the sound's waveform.
- * @return Sample value multiplied by the total gain.
+ *
+ * Applies smooth transitions for volume and dB level, evaluates all active modulators,
+ * updates generator frequency when needed, processes the waveform, and applies all
+ * active audio effects before returning the final mixed sample.
+ *
+ * @return Final processed audio sample.
  */
 float Sound::Generate()
 {
@@ -362,7 +367,10 @@ std::vector<std::unique_ptr<AudioEffect>>& Sound::GetEffects()
 
 /**
  * @brief Adds a modulator to the sound object.
- * @param mod Modulator to add.
+ * @param mod Modulator to add (copied into internal storage).
+ *
+ * Ensures only one modulator per target type exists. If a modulator for the same target
+ * already exists, the function returns early and does not add a duplicate.
  */
 void Sound::AddModulator(const Modulator& mod)
 {
@@ -374,7 +382,8 @@ void Sound::AddModulator(const Modulator& mod)
  * @param modTarget Target type of the modulator.
  * @return Pointer to the modulator if found, otherwise nullptr.
  *
- * Logs a message if the modulator is not found.
+ * Searches through all stored modulators and returns the first match. If no modulator
+ * is found for the requested target, nullptr is returned and a diagnostic message is printed.
  */
 Modulator* Sound::GetModulator(const ModulatorTarget modTarget) const
 {
@@ -388,7 +397,9 @@ Modulator* Sound::GetModulator(const ModulatorTarget modTarget) const
 
 /**
  * @brief Provides access to the list of modulators.
- * @return Reference to the vector of modulators.
+ * @return Reference to the internal vector of modulators.
+ *
+ * Allows direct iteration or inspection of all modulators attached to the sound object.
  */
 std::vector<std::unique_ptr<Modulator>>& Sound::GetModulators()
 {

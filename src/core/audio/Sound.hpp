@@ -8,55 +8,49 @@
 #include "effects/Modulator.hpp"
 #include "generators/GeneratorType.hpp"
 #include "generators/SoundGenerator.hpp"
-#include "generators/SquareGenerator.hpp"
-
-namespace MT::Core::Audio
-{
-class SawGenerator;
-}
-
-namespace MT::Core::Audio
-{
-class NoiseGenerator;
-}
-
-namespace MT::Core::Audio
-{
-class SineGenerator;
-}
 
 namespace MT::Core::Audio
 {
 class FadeEffect;
 
 /**
- * @brief Represents a configurable audio signal generator with support for modulation and effects.
+ * @brief Represents a configurable audio signal generator with modulation, effects, and modulation chains.
  *
- * The Sound class is responsible for producing audio samples in real time via the Generate() function.
- * It encapsulates a waveform generator, amplitude controls, pitch handling, modulators, and a chain
- * of audio effects.
+ * The Sound class is a real-time audio synthesis unit that generates waveform samples using a selectable
+ * generator, then processes them through modulators and an effect chain before producing final output.
  *
- * A Sound instance operates as follows:
- * - A generator (e.g. sine, square, noise) produces the base waveform.
- * - Frequency is determined by the base frequency, frequency offset, and pitch multiplier.
- * - Modulators dynamically influence parameters such as frequency, pitch, and amplitude over time.
- * - Effects are applied sequentially to the generated sample.
- * - Final output is scaled by volume, decibel level, and mute state.
+ * Audio pipeline overview:
+ * - A SoundGenerator produces the base waveform (sine, square, noise, saw, etc.).
+ * - Frequency is derived from base frequency, frequency offset, and pitch multiplier.
+ * - Modulators dynamically influence frequency, pitch, amplitude, or decibel levels per sample.
+ * - Audio effects are applied sequentially after waveform generation.
+ * - Final output is scaled by volume, dB gain, and mute state.
  *
- * Key features:
- * - Multiple generator types selectable at runtime.
- * - Real-time parameter modulation via Modulator objects.
- * - Extensible effect chain using AudioEffect-derived classes.
- * - Independent control of linear volume and decibel gain.
+ * Modulation system:
+ * - Each Sound instance can hold multiple Modulator objects.
+ * - Each Modulator targets a specific parameter (frequency, pitch, amplitude, or dB).
+ * - Only one Modulator per target type is permitted.
+ * - Modulators are evaluated per generated sample for real-time parameter changes.
+ *
+ * Effect system:
+ * - Supports a chain of AudioEffect-derived objects.
+ * - Only one FadeEffect instance is allowed per Sound.
+ * - Effects are applied in insertion order after waveform generation.
+ *
+ * Design features:
+ * - Runtime switchable waveform generators.
+ * - Independent linear and decibel-based amplitude control.
+ * - Smooth parameter interpolation for volume and dB changes.
+ * - Modular extensibility for generators, effects, and modulators.
  *
  * Typical usage:
- * - Construct a Sound with a sample rate and generator type.
- * - Configure frequency, volume, and pitch.
- * - Optionally add modulators and effects.
- * - Call Generate() repeatedly to produce audio samples.
+ * - Construct Sound with sample rate and generator type.
+ * - Configure frequency, pitch, and volume.
+ * - Optionally attach modulators and effects.
+ * - Call Generate() continuously to produce audio samples.
  *
- * The class is designed for flexible synthesis and can be extended with custom generators,
- * effects, and modulation behaviours.
+ * This class is intended for procedural audio synthesis, sound design tools,
+ * and real-time audio systems requiring flexible modulation and effect control.
  */
 class Sound
 {

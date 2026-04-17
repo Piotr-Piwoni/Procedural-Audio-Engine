@@ -4,6 +4,8 @@
 #include <thread>
 
 #include "core/audio/effects/FadeEffect.hpp"
+#include "core/audio/generators/NoiseGenerator.hpp"
+#include "core/audio/generators/SquareGenerator.hpp"
 #include "IMGUI/imgui.h"
 #include "ImGUI/imgui_internal.h"
 #include "ui/imgui-knobs.h"
@@ -234,9 +236,9 @@ void MT::DemoApplication::RenderSoundSettings(Sound& sound, const size_t index)
 
 
 	// Pitch knob.
-	ImGui::SameLine(90.f);
 	if (sound.GetGeneratorType() != GeneratorType::NOISE)
 	{
+		ImGui::SameLine(90.f);
 		RenderKnob("Pitch Multiplier", index, sound.GetPitchMultiplier(), 0.f,
 				   10.f, 0.1f, [&](const float p)
 				   {
@@ -245,6 +247,27 @@ void MT::DemoApplication::RenderSoundSettings(Sound& sound, const size_t index)
 				   "%0.1f");
 	}
 
+
+	// Generator specific fields.
+	// Random seed field.
+	if (sound.GetGeneratorType() == GeneratorType::NOISE)
+	{
+		auto generator = dynamic_cast<NoiseGenerator*>(sound.GetGenerator());
+		int seed = static_cast<int>(generator->GetSeed());
+		if (ImGui::InputInt(MakeLabel("Random Seed", index).c_str(), &seed))
+			generator->SetSeed(static_cast<uint32_t>(seed));
+	}
+
+	// Pulse width field.
+	if (sound.GetGeneratorType() == GeneratorType::SQUARE)
+	{
+		auto generator = dynamic_cast<SquareGenerator*>(sound.GetGenerator());
+		float width = generator->GetPulseWidth();
+		if (ImGui::DragFloat(MakeLabel("Pulse Width", index).c_str(), &width,
+							 0.01f, 0.f, 1.f, "%.3f",
+							 ImGuiSliderFlags_AlwaysClamp))
+			generator->SetPulseWidth(width);
+	}
 
 	// Effects menu.
 	if (ImGui::BeginMenu(MakeLabel("Add Effect", index).c_str()))
