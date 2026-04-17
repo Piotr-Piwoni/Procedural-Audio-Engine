@@ -131,7 +131,11 @@ void Sound::AddEffect()
 				  "T must derive from AudioEffect!");
 
 	// Only one fade effects per sound object.
-	if (HasEffect<FadeEffect>())return;
+	if (HasEffect<FadeEffect>())
+	{
+		std::print("There's already a Fade Effect on the Sound!\n");
+		return;
+	}
 
 	auto effect = std::make_unique<T>();
 	effect->OnAudioLengthChanged(m_AudioLength);
@@ -152,7 +156,6 @@ T* Sound::GetEffect()
 		if (auto casted = dynamic_cast<T*>(effect.get()))
 			return casted;
 
-	std::print("Chosen effect could not be found!");
 	return nullptr;
 }
 

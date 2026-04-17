@@ -353,14 +353,12 @@ std::vector<std::unique_ptr<AudioEffect>>& Sound::GetEffects()
 }
 
 /**
- * @brief Adds a modulator if one with the same target does not already exist.
+ * @brief Adds a modulator to the sound object.
  * @param mod Modulator to add.
  */
 void Sound::AddModulator(const Modulator& mod)
 {
-	// Prevent duplicate modulators.
-	if (GetModulator(mod.GetTarget()) != nullptr) return;
-	m_Modulators.push_back(std::move(std::make_unique<Modulator>(mod)));
+	m_Modulators.push_back(std::make_unique<Modulator>(mod));
 }
 
 /**

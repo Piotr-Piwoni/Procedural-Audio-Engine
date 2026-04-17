@@ -3,6 +3,7 @@
 #include <numbers>
 
 #include "ModulatorTypes.hpp"
+#include "IMGUI/imgui.h"
 
 namespace MT::Core::Audio
 {
@@ -41,7 +42,6 @@ public:
 
 		return wave * m_Depth;
 	}
-
 
 	void SetFrequency(const float fq) { m_Frequency = fq; }
 	[[nodiscard]] float GetFrequency() const { return m_Frequency; }

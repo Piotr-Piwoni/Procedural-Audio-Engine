@@ -45,6 +45,7 @@ private:
 
 	void RenderSoundSettings(Core::Audio::Sound& sound, size_t index);
 	void CreateStartStopAudioButton();
+	bool RenderModulatorUI(Core::Audio::Modulator& modulator);
 
 	void UpdateSoundLength();
 
