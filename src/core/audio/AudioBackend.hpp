@@ -1,6 +1,9 @@
 ﻿#pragma once
+#ifdef _WIN32
+#define NOMINMAX
+#endif
+
 #include <Audioclient.h>
-#include <Windows.h>
 #include <expected>
 #include <mmdeviceapi.h>
 #include <stdint.h>

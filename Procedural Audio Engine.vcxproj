@@ -11,7 +11,8 @@
         </ProjectConfiguration>
     </ItemGroup>
     <ItemGroup>
-        <ClCompile Include="src\Application.cpp">
+        <ClCompile Include="src\core\AudioEngine.cpp"/>
+        <ClCompile Include="src\DemoApplication.cpp">
             <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
             <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
             <Optimization>Disabled</Optimization>
@@ -180,14 +181,25 @@
         <Folder Include="assets\"/>
     </ItemGroup>
     <ItemGroup>
-        <ClInclude Include="src\Application.hpp"/>
+        <ClInclude Include="src\core\AudioEngine.hpp"/>
+        <ClInclude Include="src\DemoApplication.hpp"/>
         <ClInclude Include="src\core\audio\AudioBackend.hpp"/>
         <ClInclude Include="src\core\audio\AudioTypes.hpp"/>
+        <ClInclude Include="src\core\audio\effects\AudioEffect.hpp"/>
+        <ClInclude Include="src\core\audio\effects\FadeEffect.hpp"/>
+        <ClInclude Include="src\core\audio\effects\Modulator.hpp"/>
+        <ClInclude Include="src\core\audio\generators\GeneratorType.hpp"/>
+        <ClInclude Include="src\core\audio\generators\SawGenerator.hpp"/>
+        <ClInclude Include="src\core\audio\generators\SineGenerator.hpp"/>
+        <ClInclude Include="src\core\audio\generators\SoundGenerator.hpp"/>
+        <ClInclude Include="src\core\audio\generators\NoiseGenerator.hpp"/>
+        <ClInclude Include="src\core\audio\generators\SquareGenerator.hpp"/>
         <ClInclude Include="src\core\audio\Sound.hpp"/>
         <ClInclude Include="src\core\ImGuiLayer.hpp"/>
         <ClInclude Include="src\core\Window.hpp"/>
         <ClInclude Include="src\ui\imgui-knobs.h"/>
         <ClInclude Include="src\Utilities\ImGuiTypesWrapper.hpp"/>
+        <ClInclude Include="src\Utilities\TypeDefinitions.hpp"/>
         <ClInclude Include="src\Utilities\Utils.hpp"/>
         <ClInclude Include="third-party\Eigen\src\AccelerateSupport\AccelerateSupport.h"/>
         <ClInclude Include="third-party\Eigen\src\AccelerateSupport\InternalHeaderCheck.h"/>
@@ -579,8 +591,8 @@
         <ClInclude Include="third-party\ImGui\include\IMGUI\imstb_truetype.h"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Include=".clang-format"/>
         <Content Include="imgui.ini"/>
+        <Content Include="src\core\audio\effects\ModulatorTypes.hpp"/>
         <Content Include="third-party\Eigen\AccelerateSupport"/>
         <Content Include="third-party\Eigen\Cholesky"/>
         <Content Include="third-party\Eigen\CholmodSupport"/>
