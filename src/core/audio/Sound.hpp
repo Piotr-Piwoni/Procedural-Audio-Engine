@@ -6,9 +6,24 @@
 #include "../../Utilities/TypeDefinitions.hpp"
 #include "effects/AudioEffect.hpp"
 #include "effects/Modulator.hpp"
-#include "generators/GeneratorParams.hpp"
 #include "generators/GeneratorType.hpp"
 #include "generators/SoundGenerator.hpp"
+#include "generators/SquareGenerator.hpp"
+
+namespace MT::Core::Audio
+{
+class SawGenerator;
+}
+
+namespace MT::Core::Audio
+{
+class NoiseGenerator;
+}
+
+namespace MT::Core::Audio
+{
+class SineGenerator;
+}
 
 namespace MT::Core::Audio
 {
@@ -83,6 +98,7 @@ public:
 
 	void SetGeneratorType(GeneratorType type);
 	[[nodiscard]] GeneratorType GetGeneratorType() const;
+	[[nodiscard]] SoundGenerator* GetGenerator() const;
 
 	void SetAudioLength(Duration length);
 	[[nodiscard]] Duration GetAudioLength() const;
@@ -103,18 +119,21 @@ private:
 	float m_Volume{0.f};
 	float m_DBLevel{0.f};
 	bool m_IsMuted{false};
-	unsigned long m_SampleRate{1};
-	float m_FrequencyOffset{0.f};
-	float m_BaseFrequency{440.f};
-	float m_LastFrequency{0.f};
-	float m_PitchMultiplier{1.f};
-	std::unique_ptr<SoundGenerator> m_Generator{nullptr};
-	GeneratorParams m_GeneratorParams{};
-	GeneratorType m_Type{GeneratorType::NONE};
 	Duration m_AudioLength{0.f};
+
+	float m_BaseFrequency{440.f};
+	float m_FrequencyOffset{0.f};
+	float m_LastFrequency{0.f};
+
+	unsigned long m_SampleRate{1};
+	float m_PitchMultiplier{1.f};
+	float m_DeltaTime{0.f};
+
+	std::unique_ptr<SoundGenerator> m_Generator{nullptr};
+	GeneratorType m_GeneratorType{GeneratorType::NONE};
+
 	std::vector<std::unique_ptr<AudioEffect>> m_Effects{};
 	std::vector<std::unique_ptr<Modulator>> m_Modulators{};
-	float m_DeltaTime{0.f};
 };
 
 /**

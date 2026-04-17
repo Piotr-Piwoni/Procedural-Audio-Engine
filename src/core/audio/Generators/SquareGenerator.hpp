@@ -6,14 +6,12 @@ namespace MT::Core::Audio
 class SquareGenerator final : public SoundGenerator
 {
 public:
-	float Generate(const GeneratorParams& params) override
+	float Generate() override
 	{
-		const float sample = m_Phase < params.PulseWidth ? 1.f : -1.f;
+		const float sample = m_Phase < m_PulseWidth ? 1.f : -1.f;
 
 		m_Phase += m_PhaseIncrement;
-
-		if (m_Phase >= 1.0f)
-			m_Phase -= 1.0f;
+		if (m_Phase >= 1.0f) m_Phase -= 1.0f;
 
 		return sample;
 	}
@@ -29,5 +27,11 @@ public:
 
 		m_PhaseIncrement = frequency / static_cast<float>(sampleRate);
 	}
+
+	void SetPulseWidth(const float width) { m_PulseWidth = width; }
+	[[nodiscard]] float GetPulseWidth() const { return m_PulseWidth; }
+
+private:
+	float m_PulseWidth = 0.5f;
 };
 }

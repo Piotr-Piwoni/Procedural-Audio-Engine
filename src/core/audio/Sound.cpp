@@ -80,7 +80,7 @@ float Sound::Generate()
 		m_LastFrequency = effectiveFrequency;
 	}
 
-	float sample = m_Generator->Generate(m_GeneratorParams);
+	float sample = m_Generator->Generate();
 
 	// Apply effects.
 	for (const auto& audioEffect : m_Effects)
@@ -287,9 +287,9 @@ float Sound::GetPitchMultiplier() const
  */
 void Sound::SetGeneratorType(const GeneratorType type)
 {
-	m_Type = type;
+	m_GeneratorType = type;
 
-	switch (m_Type)
+	switch (m_GeneratorType)
 	{
 	case GeneratorType::NONE:
 	case GeneratorType::SINE:
@@ -317,7 +317,12 @@ void Sound::SetGeneratorType(const GeneratorType type)
  */
 GeneratorType Sound::GetGeneratorType() const
 {
-	return m_Type;
+	return m_GeneratorType;
+}
+
+SoundGenerator* Sound::GetGenerator() const
+{
+	return m_Generator.get();
 }
 
 /**

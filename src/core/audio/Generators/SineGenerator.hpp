@@ -8,7 +8,7 @@ namespace MT::Core::Audio
 class SineGenerator final : public SoundGenerator
 {
 public:
-	float Generate(const GeneratorParams& params) override
+	float Generate() override
 	{
 		const float sample = std::sinf(m_Phase);
 

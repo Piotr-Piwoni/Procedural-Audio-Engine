@@ -186,7 +186,6 @@
         <ClInclude Include="src\core\audio\effects\AudioEffect.hpp"/>
         <ClInclude Include="src\core\audio\effects\FadeEffect.hpp"/>
         <ClInclude Include="src\core\audio\effects\Modulator.hpp"/>
-        <ClInclude Include="src\core\audio\generators\GeneratorParams.hpp"/>
         <ClInclude Include="src\core\audio\generators\GeneratorType.hpp"/>
         <ClInclude Include="src\core\audio\generators\SawGenerator.hpp"/>
         <ClInclude Include="src\core\audio\generators\SineGenerator.hpp"/>

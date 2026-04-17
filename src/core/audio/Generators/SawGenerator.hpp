@@ -6,7 +6,7 @@ namespace MT::Core::Audio
 class SawGenerator final : public SoundGenerator
 {
 public:
-	float Generate(const GeneratorParams& params) override
+	float Generate() override
 	{
 		const float sample = 2.0f * m_Phase - 1.0f;
 
