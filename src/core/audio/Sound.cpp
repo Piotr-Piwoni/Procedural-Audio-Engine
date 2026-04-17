@@ -39,6 +39,10 @@ Sound::Sound(const float volume, const unsigned long sampleRate,
  */
 float Sound::Generate()
 {
+	constexpr float smoothing = 0.002f;
+	m_Volume += (m_TargetVolume - m_Volume) * smoothing;
+	m_DBLevel += (m_TargetDB - m_DBLevel) * smoothing;
+
 	float effectiveFrequency = m_BaseFrequency;
 	float pitchMult = m_PitchMultiplier;
 	float volume = m_Volume;
@@ -93,10 +97,9 @@ float Sound::Generate()
  * @brief Sets the sound volume.
  * @param volume Volume value, clamped between 0 and 1.
  */
-void Sound::SetVolume(float volume)
+void Sound::SetVolume(const float volume)
 {
-	volume = std::clamp(volume, 0.f, 1.f);
-	m_Volume = volume;
+	m_TargetVolume = std::clamp(volume, 0.f, 1.f);
 }
 
 /**
@@ -148,7 +151,7 @@ bool Sound::IsMuted() const
  */
 void Sound::SetDBLevel(const float db)
 {
-	m_DBLevel = db;
+	m_TargetDB = db;
 }
 
 /**

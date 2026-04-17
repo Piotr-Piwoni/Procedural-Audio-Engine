@@ -121,8 +121,10 @@ public:
 	[[nodiscard]] std::vector<std::unique_ptr<Modulator>>& GetModulators();
 
 private:
+	float m_TargetVolume = 0.f;
 	float m_Volume{0.f};
 	float m_DBLevel{0.f};
+	float m_TargetDB = 0.f;
 	bool m_IsMuted{false};
 	Duration m_AudioLength{0.f};
 
