@@ -54,7 +54,6 @@ private:
 
 	float m_MasterVolume{1.f};
 	std::vector<Core::Audio::Sound> m_Sounds{};
-	std::vector<float> m_BaseFrequencies{};
 	uint32_t m_FramesGenerated{0};
 	Duration m_AudioLength{5.f};
 	bool m_IsSoundContinues{false};

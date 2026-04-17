@@ -20,7 +20,6 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 	glfwSetKeyCallback(m_Window, KeyCallback);
 
 	m_Sounds.reserve(16);
-	m_BaseFrequencies.reserve(16);
 
 	if (const WAVEFORMATEX* format = m_Backend->GetFormat())
 		m_SampleRate = format->nSamplesPerSec;
@@ -62,10 +61,6 @@ void MT::Application::Update()
 		m_Backend->StopPlayback();
 		return;
 	}
-
-	for (size_t i = 0; i < m_Sounds.size(); i++)
-		m_Sounds[i].SetFrequencyOffset(m_BaseFrequencies[i] *
-									   m_Sounds[i].GetPitchMultiplier());
 
 	uint32_t framesToWrite = frames;
 	if (!m_IsSoundContinues && m_FramesGenerated + frames > maxFrames)
@@ -128,15 +123,11 @@ void MT::Application::Render()
 		if (ImGui::Button("Add Sound", buttonSize))
 		{
 			auto& sound = m_Sounds.emplace_back(0.25f, m_SampleRate);
-			m_BaseFrequencies.push_back(sound.GetFrequencyOffset());
 			sound.SetAudioLength(m_AudioLength);
 		}
 
 		if (!m_Sounds.empty() && ImGui::Button("Remove Sound", buttonSize))
-		{
-			m_BaseFrequencies.pop_back();
 			m_Sounds.pop_back();
-		}
 	}
 	ImGui::End();
 }
@@ -298,11 +289,11 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 	// Frequency.
 	if (sound.GetGeneratorType() != GeneratorType::NOISE)
 	{
-		float frequency = m_BaseFrequencies[index];
+		float frequency = sound.GetBaseFrequency();
 		if (ImGui::DragFloat(MakeLabel("Hz", index).c_str(), &frequency, 1.f,
 							 1.f, FLT_MAX, "%0.3f",
 							 ImGuiSliderFlags_AlwaysClamp))
-			m_BaseFrequencies[index] = frequency;
+			sound.SetBaseFrequency(frequency);
 	}
 
 
