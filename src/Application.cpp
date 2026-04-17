@@ -64,8 +64,8 @@ void MT::Application::Update()
 	}
 
 	for (size_t i = 0; i < m_Sounds.size(); i++)
-		m_Sounds[i].SetFrequency(m_BaseFrequencies[i] *
-								 m_Sounds[i].GetPitchMultiplier());
+		m_Sounds[i].SetFrequencyOffset(m_BaseFrequencies[i] *
+									   m_Sounds[i].GetPitchMultiplier());
 
 	uint32_t framesToWrite = frames;
 	if (!m_IsSoundContinues && m_FramesGenerated + frames > maxFrames)
@@ -128,7 +128,7 @@ void MT::Application::Render()
 		if (ImGui::Button("Add Sound", buttonSize))
 		{
 			auto& sound = m_Sounds.emplace_back(0.25f, m_SampleRate);
-			m_BaseFrequencies.push_back(sound.GetFrequency());
+			m_BaseFrequencies.push_back(sound.GetFrequencyOffset());
 			sound.SetAudioLength(m_AudioLength);
 		}
 
