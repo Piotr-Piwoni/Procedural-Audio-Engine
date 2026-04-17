@@ -4,6 +4,13 @@
 
 namespace MT::Core
 {
+/**
+ * @brief Initialises the audio engine and underlying backend.
+ * @return True if initialisation succeeds, false otherwise.
+ *
+ * Creates the audio backend, initialises it, and retrieves the audio format.
+ * Stores sample rate and channel count for later use.
+ */
 bool AudioEngine::Init()
 {
 	m_Backend = std::make_unique<Audio::AudioBackend>();
@@ -30,6 +37,20 @@ bool AudioEngine::Init()
 	return true;
 }
 
+/**
+ * @brief Updates the audio engine and fills the output buffer.
+ *
+ * Validates the backend state and retrieves a writable audio buffer. Generates
+ * mixed audio samples from all active sounds, applies master volume, and writes
+ * the result across all output channels.
+ *
+ * For non-continuous playback:
+ * - Limits generation based on the configured audio length.
+ * - Stops playback when the total frame count is reached.
+ *
+ * The function also tracks generated frames and ensures the backend buffer
+ * is always released after processing.
+ */
 void AudioEngine::Update()
 {
 	Audio::AudioBuffer buffer{};
@@ -60,9 +81,10 @@ void AudioEngine::Update()
 			mixedSample += sound.Generate();
 		mixedSample *= m_MasterVolume;
 
-		buffer.Data[frame * m_Channels + 0] = mixedSample;
-		if (m_Channels > 1)
-			buffer.Data[frame * m_Channels + 1] = mixedSample;
+		// Write to all channels.
+		const uint32_t baseIndex = frame * m_Channels;
+		for (uint32_t channel = 0; channel < m_Channels; channel++)
+			buffer.Data[baseIndex + channel] = mixedSample;
 	}
 
 	// Push to the audio thread.
@@ -70,7 +92,11 @@ void AudioEngine::Update()
 	m_Backend->ReleaseBuffer(buffer.Frames);
 }
 
-
+/**
+ * @brief Starts audio playback.
+ *
+ * Resets frame counters and all effects on active sounds before starting playback.
+ */
 void AudioEngine::PlayAudio()
 {
 	m_FramesGenerated = 0;
@@ -83,11 +109,17 @@ void AudioEngine::PlayAudio()
 	m_Backend->StartPlayback();
 }
 
+/**
+ * @brief Stops audio playback.
+ */
 void AudioEngine::StopAudio() const
 {
 	m_Backend->StopPlayback();
 }
 
+/**
+ * @brief Toggles playback state between playing and stopped.
+ */
 void AudioEngine::TogglePlayback()
 {
 	const auto state = m_Backend->GetPlaybackState();
@@ -95,16 +127,25 @@ void AudioEngine::TogglePlayback()
 	else if (state == Audio::PlaybackState::STOPPED) PlayAudio();
 }
 
+/**
+ * @brief Pauses audio playback.
+ */
 void AudioEngine::PauseAudio() const
 {
 	m_Backend->PausePlayback();
 }
 
+/**
+ * @brief Resumes audio playback if paused.
+ */
 void AudioEngine::UnpauseAudio() const
 {
 	m_Backend->ResumePlayback();
 }
 
+/**
+ * @brief Toggles pause state between paused and playing.
+ */
 void AudioEngine::TogglePause() const
 {
 	const auto state = m_Backend->GetPlaybackState();
@@ -112,10 +153,24 @@ void AudioEngine::TogglePause() const
 	else if (state == Audio::PlaybackState::PAUSED) m_Backend->ResumePlayback();
 }
 
-
+/**
+ * @brief Checks if any sounds are currently managed.
+ * @return True if at least one sound exists, false otherwise.
+ */
 bool AudioEngine::HasSounds() const { return !m_Sounds.empty(); }
+
+/**
+ * @brief Provides access to the list of sounds.
+ * @return Reference to the internal deque of sounds.
+ */
 std::deque<Audio::Sound>& AudioEngine::GetSounds() { return m_Sounds; }
 
+/**
+ * @brief Creates and adds a new sound.
+ * @param volume Initial volume.
+ * @param type Generator type.
+ * @return Reference to the created sound.
+ */
 Audio::Sound& AudioEngine::CreateSound(const float volume,
 									   const Audio::GeneratorType type)
 {
@@ -123,6 +178,13 @@ Audio::Sound& AudioEngine::CreateSound(const float volume,
 	return sound;
 }
 
+/**
+ * @brief Creates multiple sounds.
+ * @param amount Number of sounds to create.
+ * @param volume Initial volume for each sound.
+ * @param type Generator type.
+ * @return Vector of pointers to created sounds.
+ */
 std::vector<Audio::Sound*> AudioEngine::CreateSounds(
 		const int amount, float volume, Audio::GeneratorType type)
 {
@@ -138,22 +200,37 @@ std::vector<Audio::Sound*> AudioEngine::CreateSounds(
 	return createdSounds;
 }
 
+/**
+ * @brief Adds a sound to the engine.
+ * @param sound Sound to add (moved into storage).
+ */
 void AudioEngine::AddSound(Audio::Sound sound)
 {
 	m_Sounds.push_back(std::move(sound));
 }
 
+/**
+ * @brief Adds multiple sounds to the engine.
+ * @param sounds Collection of sounds to add (moved into storage).
+ */
 void AudioEngine::AddSounds(std::vector<Audio::Sound> sounds)
 {
 	for (auto& sound : sounds)
 		m_Sounds.push_back(std::move(sound));
 }
 
+/**
+ * @brief Removes the last sound from the engine.
+ */
 void AudioEngine::RemoveSound()
 {
 	if (HasSounds()) m_Sounds.pop_back();
 }
 
+/**
+ * @brief Removes a sound at a specific index.
+ * @param index Index of the sound to remove.
+ */
 void AudioEngine::RemoveSound(const size_t index)
 {
 	if (!HasSounds()) return;
@@ -167,6 +244,11 @@ void AudioEngine::RemoveSound(const size_t index)
 	m_Sounds.erase(m_Sounds.begin() + index);
 }
 
+/**
+ * @brief Removes a range of sounds.
+ * @param start Starting index (inclusive).
+ * @param end Ending index (inclusive).
+ */
 void AudioEngine::RemoveSounds(const size_t start, const size_t end)
 {
 	if (!HasSounds()) return;
@@ -181,7 +263,12 @@ void AudioEngine::RemoveSounds(const size_t start, const size_t end)
 	m_Sounds.erase(m_Sounds.begin() + start, m_Sounds.begin() + end + 1);
 }
 
-
+/**
+ * @brief Sets the total audio length.
+ * @param length Duration of playback.
+ *
+ * Updates all sounds with the new length, or sets to zero if continuous mode is enabled.
+ */
 void AudioEngine::SetAudioLength(const Duration length)
 {
 	m_AudioLength = length;
@@ -192,11 +279,24 @@ void AudioEngine::SetAudioLength(const Duration length)
 	}
 }
 
+/**
+ * @brief Retrieves the current audio length.
+ * @return Duration of playback.
+ */
 Duration AudioEngine::GetAudioLength() const { return m_AudioLength; }
 
-
+/**
+ * @brief Checks if sounds are set to continuous playback.
+ * @return True if continuous, false otherwise.
+ */
 bool AudioEngine::AreSoundsContinues() const { return m_IsSoundContinues; }
 
+/**
+ * @brief Enables or disables continuous playback.
+ * @param val True for continuous playback, false otherwise.
+ *
+ * Updates all sounds accordingly.
+ */
 void AudioEngine::SetSoundsContinues(const bool val)
 {
 	m_IsSoundContinues = val;
@@ -207,29 +307,59 @@ void AudioEngine::SetSoundsContinues(const bool val)
 	}
 }
 
-
+/**
+ * @brief Retrieves the master volume.
+ * @return Volume value between 0 and 1.
+ */
 float AudioEngine::GetVolume() const { return m_MasterVolume; }
 
+/**
+ * @brief Sets the master volume.
+ * @param volume Volume value clamped between 0 and 1.
+ */
 void AudioEngine::SetVolume(const float volume)
 {
 	m_MasterVolume = std::clamp(volume, 0.f, 1.f);
 }
 
-
+/**
+ * @brief Retrieves the current sample rate.
+ * @return Sample rate in Hz.
+ */
 unsigned long AudioEngine::GetSampleRate() const { return m_SampleRate; }
+
+/**
+ * @brief Retrieves the number of audio channels.
+ * @return Number of channels.
+ */
 unsigned short AudioEngine::GetChannels() const { return m_Channels; }
 
+/**
+ * @brief Retrieves the current audio format.
+ * @return Reference to WAVEFORMATEX structure.
+ */
 const WAVEFORMATEX& AudioEngine::GetFormat() const
 {
 	return *m_Backend->GetFormat();
 }
 
+/**
+ * @brief Retrieves the current playback state.
+ * @return Playback state enum.
+ */
 Audio::PlaybackState AudioEngine::GetState() const
 {
 	return m_Backend->GetPlaybackState();
 }
 
-
+/**
+ * @brief Validates whether the engine is ready to generate audio.
+ * @param audioBuffer Output buffer to populate if valid.
+ * @return True if ready to run, false otherwise.
+ *
+ * Ensures backend format is valid, updates sample rate and channels if needed,
+ * checks playback state, and retrieves a valid buffer for writing.
+ */
 bool AudioEngine::IsValidToRun(Audio::AudioBuffer& audioBuffer)
 {
 	const WAVEFORMATEX* format = m_Backend->GetFormat();
