@@ -11,10 +11,10 @@ namespace chrono = std::chrono;
 
 namespace MT
 {
-class Application
+class DemoApplication
 {
 public:
-	Application(GLFWwindow* win, Core::Audio::AudioBackend* backend);
+	DemoApplication(GLFWwindow* win, Core::Audio::AudioBackend* backend);
 
 	void Update();
 	void Render();
@@ -27,7 +27,7 @@ private:
 							const int scancode, const int action,
 							const int mods)
 	{
-		auto app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+		auto app = static_cast<DemoApplication*>(glfwGetWindowUserPointer(window));
 		if (app)
 			app->OnKey(key, scancode, action, mods);
 	}
@@ -45,6 +45,7 @@ private:
 
 	void RenderSoundSettings(Core::Audio::Sound& sound, size_t index);
 	void CreateStartStopAudioButton();
+	bool RenderEffectUI(Core::Audio::AudioEffect* effect);
 	bool RenderModulatorUI(Core::Audio::Modulator& modulator);
 
 	void UpdateSoundLength();

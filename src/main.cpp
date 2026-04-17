@@ -1,6 +1,6 @@
 #include <print>
 
-#include "Application.hpp"
+#include "DemoApplication.hpp"
 #include "core/ImGuiLayer.hpp"
 #include "core/Window.hpp"
 #include "core/audio/AudioBackend.hpp"
@@ -32,7 +32,7 @@ int main()
 
 
 	MT::Core::ImGuiLayer imGuiLayer(window.Ptr.get());
-	const auto app = std::make_unique<MT::Application>(
+	const auto app = std::make_unique<MT::DemoApplication>(
 			window.Ptr.get(), &backend);
 
 	while (!window.ShouldClose())
@@ -45,7 +45,6 @@ int main()
 		app->Render();
 
 		window.SwapBuffers(&imGuiLayer);
-
 	}
 	return EXIT_SUCCESS;
 }

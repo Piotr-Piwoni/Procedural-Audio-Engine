@@ -11,7 +11,7 @@
         </ProjectConfiguration>
     </ItemGroup>
     <ItemGroup>
-        <ClCompile Include="src\Application.cpp">
+        <ClCompile Include="src\DemoApplication.cpp">
             <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
             <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
             <Optimization>Disabled</Optimization>
@@ -180,12 +180,12 @@
         <Folder Include="assets\"/>
     </ItemGroup>
     <ItemGroup>
-        <ClInclude Include="src\Application.hpp"/>
+        <ClInclude Include="src\DemoApplication.hpp"/>
         <ClInclude Include="src\core\audio\AudioBackend.hpp"/>
         <ClInclude Include="src\core\audio\AudioTypes.hpp"/>
         <ClInclude Include="src\core\audio\effects\AudioEffect.hpp"/>
         <ClInclude Include="src\core\audio\effects\FadeEffect.hpp"/>
-        <ClInclude Include="src\core\audio\effects\Modulator.hpp" />
+        <ClInclude Include="src\core\audio\effects\Modulator.hpp"/>
         <ClInclude Include="src\core\audio\generators\GeneratorParams.hpp"/>
         <ClInclude Include="src\core\audio\generators\GeneratorType.hpp"/>
         <ClInclude Include="src\core\audio\generators\SawGenerator.hpp"/>
@@ -591,7 +591,7 @@
     </ItemGroup>
     <ItemGroup>
         <Content Include="imgui.ini"/>
-        <Content Include="src\core\audio\effects\ModulatorTypes.hpp" />
+        <Content Include="src\core\audio\effects\ModulatorTypes.hpp"/>
         <Content Include="third-party\Eigen\AccelerateSupport"/>
         <Content Include="third-party\Eigen\Cholesky"/>
         <Content Include="third-party\Eigen\CholmodSupport"/>

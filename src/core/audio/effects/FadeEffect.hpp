@@ -46,40 +46,6 @@ public:
 
 	void Reset() override { m_Time = Duration::zero(); }
 
-	bool RenderUI() override
-	{
-		ImGui::PushID(this);
-
-		if (ImGui::CollapsingHeader("Fade Effect"))
-		{
-			if (ImGui::Button("X"))
-			{
-				Reset();
-				ImGui::PopID();
-				return false;
-			}
-
-			float inPoint = m_FadeInPoint.count();
-			const float max = m_AudioLength.count() > 0.f
-							  ? m_AudioLength.count() : FLT_MAX;
-			if (ImGui::DragFloat("Fade Start (seconds)", &inPoint, 1.f, 0.f,
-								 max, "%0.3f", ImGuiSliderFlags_AlwaysClamp))
-				SetFadeInPoint(inPoint);
-
-			if (m_AudioLength.count() > 0.f)
-			{
-				float outPoint = m_FadeOutPoint.count();
-				if (ImGui::DragFloat("Fade Out (seconds)", &outPoint, 1.f, 0.f,
-									 m_AudioLength.count(), "%0.3f",
-									 ImGuiSliderFlags_AlwaysClamp))
-					SetFadeOutPoint(outPoint);
-			}
-		}
-
-		ImGui::PopID();
-		return true;
-	}
-
 
 	void SetFadeInPoint(const float timeStamp)
 	{

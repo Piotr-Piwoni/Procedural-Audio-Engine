@@ -1,4 +1,4 @@
-﻿#include "Application.hpp"
+﻿#include "DemoApplication.hpp"
 
 #include <print>
 #include <random>
@@ -13,7 +13,7 @@
 using namespace MT::Core::Audio;
 using namespace std::chrono_literals;
 
-MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
+MT::DemoApplication::DemoApplication(GLFWwindow* win, AudioBackend* backend) :
 	m_Window(win), m_Backend{backend}
 {
 	glfwSetWindowUserPointer(m_Window, this);
@@ -26,7 +26,7 @@ MT::Application::Application(GLFWwindow* win, AudioBackend* backend) :
 }
 
 
-void MT::Application::Update()
+void MT::DemoApplication::Update()
 {
 	UpdateSoundLength();
 
@@ -83,7 +83,7 @@ void MT::Application::Update()
 	m_Backend->ReleaseBuffer(frames);
 }
 
-void MT::Application::Render()
+void MT::DemoApplication::Render()
 {
 	const ImVec2 size = ImGui::GetMainViewport()->Size;
 	ImGui::SetNextWindowSize(size, ImGuiCond_Always);
@@ -133,9 +133,9 @@ void MT::Application::Render()
 }
 
 
-void MT::Application::OnKey(const int key, int scancode,
-							const int action,
-							int mods)
+void MT::DemoApplication::OnKey(const int key, int scancode,
+								const int action,
+								int mods)
 {
 	if (action != GLFW_PRESS)
 		return;
@@ -166,7 +166,7 @@ void MT::Application::OnKey(const int key, int scancode,
 	}
 }
 
-void MT::Application::PlayAudio()
+void MT::DemoApplication::PlayAudio()
 {
 	m_FramesGenerated = 0;
 
@@ -184,8 +184,8 @@ void MT::Application::PlayAudio()
  * @param index Index to ensure uniqueness.
  * @return Concatenated label string in the format "name##index".
  */
-std::string MT::Application::MakeLabel(const std::string& name,
-									   const size_t index)
+std::string MT::DemoApplication::MakeLabel(const std::string& name,
+										   const size_t index)
 {
 	return name + "##" + std::to_string(index);
 }
@@ -203,9 +203,9 @@ std::string MT::Application::MakeLabel(const std::string& name,
  * @param fmt Optional format string for displaying the value.
  */
 template<typename T, typename Fn>
-void MT::Application::RenderSlider(const std::string& name, size_t index,
-								   T value, T min, T max, Fn setter,
-								   const char* fmt)
+void MT::DemoApplication::RenderSlider(const std::string& name, size_t index,
+									   T value, T min, T max, Fn setter,
+									   const char* fmt)
 {
 	const std::string label = MakeLabel(name, index);
 	if (ImGui::SliderFloat(label.c_str(), &value, min, max, fmt))
@@ -226,9 +226,9 @@ void MT::Application::RenderSlider(const std::string& name, size_t index,
  * @param fmt Optional format string for displaying the value.
  */
 template<typename T, typename Fn>
-void MT::Application::RenderKnob(const std::string& name, size_t index,
-								 T value, T min, T max, T step, Fn setter,
-								 const char* fmt)
+void MT::DemoApplication::RenderKnob(const std::string& name, size_t index,
+									 T value, T min, T max, T step, Fn setter,
+									 const char* fmt)
 {
 	std::string label = MakeLabel(name, index);
 	if (ImGuiKnobs::Knob(label.c_str(), &value, min, max, step, fmt,
@@ -243,7 +243,7 @@ void MT::Application::RenderKnob(const std::string& name, size_t index,
  *
  * Renders mute/unmute button, volume slider, decibel offset knob, and pitch multiplier knob.
  */
-void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
+void MT::DemoApplication::RenderSoundSettings(Sound& sound, const size_t index)
 {
 	const std::string heading = MakeLabel("Sound " + std::to_string(index + 1),
 										  index);
@@ -331,7 +331,7 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 	for (int i = 0; static_cast<size_t>(i) < effects.size();)
 	{
 		ImGui::PushID(i);
-		const bool remove = !effects[i]->RenderUI();
+		const bool remove = !RenderEffectUI(effects[i].get());
 		ImGui::PopID();
 
 		if (remove) effects.erase(effects.begin() + i);
@@ -351,7 +351,7 @@ void MT::Application::RenderSoundSettings(Sound& sound, const size_t index)
 	}
 }
 
-void MT::Application::CreateStartStopAudioButton()
+void MT::DemoApplication::CreateStartStopAudioButton()
 {
 	const auto state = m_Backend->GetPlaybackState();
 	std::string startStopBtnLabel;
@@ -370,7 +370,49 @@ void MT::Application::CreateStartStopAudioButton()
 		PlayAudio();
 }
 
-bool MT::Application::RenderModulatorUI(Modulator& modulator)
+bool MT::DemoApplication::RenderEffectUI(AudioEffect* effect)
+{
+	ImGui::PushID(effect);
+
+	// This is for demo purposes only, in a profession project UI for
+	// different effects would be done differently.
+	if (const auto fadeEffect = dynamic_cast<FadeEffect*>(effect))
+	{
+		if (ImGui::CollapsingHeader("Fade Effect"))
+		{
+			if (ImGui::Button("X"))
+			{
+				fadeEffect->Reset();
+				ImGui::PopID();
+				return false;
+			}
+
+			float inPoint = fadeEffect->GetFadeInPoint().count();
+			const float max = m_AudioLength.count() > 0.f
+							  ? m_AudioLength.count()
+							  : FLT_MAX;
+			if (ImGui::DragFloat("Fade Start (seconds)", &inPoint, 1.f, 0.f,
+								 max, "%0.3f", ImGuiSliderFlags_AlwaysClamp))
+				fadeEffect->SetFadeInPoint(inPoint);
+
+			if (m_AudioLength.count() > 0.f)
+			{
+				ImGui::SameLine();
+				float outPoint = fadeEffect->GetFadeOutPoint().count();
+				if (ImGui::DragFloat("Fade Out (seconds)", &outPoint, 1.f, 0.f,
+									 m_AudioLength.count(), "%0.3f",
+									 ImGuiSliderFlags_AlwaysClamp))
+					fadeEffect->SetFadeOutPoint(outPoint);
+			}
+		}
+
+		ImGui::PopID();
+		return true;
+	}
+	return true;
+}
+
+bool MT::DemoApplication::RenderModulatorUI(Modulator& modulator)
 {
 	ImGui::PushID(&modulator);
 
@@ -446,7 +488,7 @@ bool MT::Application::RenderModulatorUI(Modulator& modulator)
 	return true;
 }
 
-void MT::Application::UpdateSoundLength()
+void MT::DemoApplication::UpdateSoundLength()
 {
 	if (m_Sounds.empty()) return;
 
