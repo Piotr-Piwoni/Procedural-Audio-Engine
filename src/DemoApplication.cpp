@@ -158,7 +158,7 @@ std::string MT::DemoApplication::MakeLabel(const std::string& name,
  */
 template<typename T, typename Fn>
 void MT::DemoApplication::RenderSlider(const std::string& name, size_t index,
-									   T value, T min, T max, Fn setter,
+									   T& value, T min, T max, Fn setter,
 									   const char* fmt)
 {
 	const std::string label = MakeLabel(name, index);
@@ -181,7 +181,7 @@ void MT::DemoApplication::RenderSlider(const std::string& name, size_t index,
  */
 template<typename T, typename Fn>
 void MT::DemoApplication::RenderKnob(const std::string& name, size_t index,
-									 T value, T min, T max, T step, Fn setter,
+									 T& value, T min, T max, T step, Fn setter,
 									 const char* fmt)
 {
 	std::string label = MakeLabel(name, index);
@@ -216,7 +216,8 @@ void MT::DemoApplication::RenderSoundSettings(Sound& sound, const size_t index)
 
 
 	// Volume slider.
-	RenderSlider("Volume", index, sound.GetVolume(), 0.f, 1.f,
+	float volume = sound.GetVolume();
+	RenderSlider("Volume", index, volume, 0.f, 1.f,
 				 [&](const float v) { sound.SetVolume(v); });
 
 
@@ -257,7 +258,8 @@ void MT::DemoApplication::RenderSoundSettings(Sound& sound, const size_t index)
 
 
 	// Decibel knob.
-	RenderKnob("dB Offset", index, sound.GetDBLevel(), -100.f, 100.f, 1.f,
+	float dbLevel = sound.GetDBLevel();
+	RenderKnob("dB Offset", index, dbLevel, -100.f, 100.f, 1.f,
 			   [&](const float db) { sound.SetDBLevel(db); }, "%.1f dB");
 
 
@@ -265,12 +267,10 @@ void MT::DemoApplication::RenderSoundSettings(Sound& sound, const size_t index)
 	if (sound.GetGeneratorType() != GeneratorType::NOISE)
 	{
 		ImGui::SameLine(90.f);
-		RenderKnob("Pitch Multiplier", index, sound.GetPitchMultiplier(), 0.f,
-				   10.f, 0.1f, [&](const float p)
-				   {
-					   sound.SetPitchMultiplier(p);
-				   },
-				   "%0.1f");
+
+		float pitch = sound.GetPitchMultiplier();
+		RenderKnob("Pitch Multiplier", index, pitch, 0.f, 10.f, 0.1f,
+				   [&](const float p) { sound.SetPitchMultiplier(p); }, "%0.1f");
 	}
 
 

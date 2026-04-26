@@ -29,7 +29,12 @@ Sound::Sound(const float volume, const unsigned long sampleRate,
 
 	SetGeneratorType(type);
 	SetSampleRate(sampleRate);
-	SetVolume(volume);
+
+	m_TargetVolume = volume;
+	m_Volume = volume;
+
+	m_TargetDB = 0.f;
+	m_DBLevel = 0.f;
 }
 
 
@@ -44,7 +49,9 @@ Sound::Sound(const float volume, const unsigned long sampleRate,
  */
 float Sound::Generate()
 {
-	constexpr float smoothing = 0.002f;
+	m_Generating = true;
+
+	constexpr float smoothing = 0.0001f;
 	m_Volume += (m_TargetVolume - m_Volume) * smoothing;
 	m_DBLevel += (m_TargetDB - m_DBLevel) * smoothing;
 
@@ -60,25 +67,25 @@ float Sound::Generate()
 		switch (modulator->GetTarget())
 		{
 		case ModulatorTarget::FREQUENCY:
-			{
-				effectiveFrequency *= 1.f + std::clamp(modSample, -1.f, 1.f);
-				break;
-			}
+		{
+			effectiveFrequency *= 1.f + std::clamp(modSample, -1.f, 1.f);
+			break;
+		}
 		case ModulatorTarget::PITCH:
-			{
-				pitchMult *= 1.f + modSample;
-				break;
-			}
+		{
+			pitchMult *= 1.f + modSample;
+			break;
+		}
 		case ModulatorTarget::AMPLITUDE_GAIN:
-			{
-				volume = std::clamp(volume * (1.f + modSample), 0.f, 1.f);
-				break;
-			}
+		{
+			volume = std::clamp(volume * (1.f + modSample), 0.f, 1.f);
+			break;
+		}
 		case ModulatorTarget::AMPLITUDE_DECIBEL:
-			{
-				db += modSample;
-				break;
-			}
+		{
+			db += modSample;
+			break;
+		}
 		}
 	}
 
@@ -95,6 +102,7 @@ float Sound::Generate()
 	for (const auto& audioEffect : m_Effects)
 		sample = audioEffect->Process(sample, m_DeltaTime);
 
+	m_Generating = false;
 	return sample * (m_IsMuted ? 0.f : volume) * Utilities::AsGain(db);
 }
 
@@ -102,9 +110,10 @@ float Sound::Generate()
  * @brief Sets the sound volume.
  * @param volume Volume value, clamped between 0 and 1.
  */
-void Sound::SetVolume(const float volume)
+void Sound::SetVolume(float volume)
 {
 	m_TargetVolume = std::clamp(volume, 0.f, 1.f);
+	if (!m_Generating) m_Volume = m_TargetVolume;
 }
 
 /**
@@ -154,9 +163,10 @@ bool Sound::IsMuted() const
  * @brief Sets the decibel level adjustment for the sound.
  * @param db Decibel value to apply.
  */
-void Sound::SetDBLevel(const float db)
+void Sound::SetDBLevel(float db)
 {
 	m_TargetDB = db;
+	if (!m_Generating) m_DBLevel = m_TargetDB;
 }
 
 /**

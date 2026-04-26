@@ -62,10 +62,10 @@ private:
 	static std::string MakeLabel(const std::string& name, size_t index);
 
 	template<class T, class Fn>
-	void RenderSlider(const std::string& name, size_t index, T value, T min,
+	void RenderSlider(const std::string& name, size_t index, T& value, T min,
 					  T max, Fn setter, const char* fmt = "%0.3f");
 	template<class T, class Fn>
-	void RenderKnob(const std::string& name, size_t index, T value, T min,
+	void RenderKnob(const std::string& name, size_t index, T& value, T min,
 					T max, T step, Fn setter, const char* fmt = "%0.3f");
 
 	void RenderSoundSettings(Core::Audio::Sound& sound, size_t index);

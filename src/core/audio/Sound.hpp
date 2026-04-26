@@ -135,6 +135,8 @@ private:
 
 	std::vector<std::unique_ptr<AudioEffect>> m_Effects{};
 	std::vector<std::unique_ptr<Modulator>> m_Modulators{};
+
+	bool m_Generating{false};
 };
 
 /**
