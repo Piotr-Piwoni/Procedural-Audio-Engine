@@ -46,7 +46,7 @@ Key systems include:
 
 ## 🎬 Demonstration
 A full walkthrough and demonstration of the engine and demo application:
-**YouTube:** *(link coming soon)*
+**YouTube:** https://youtu.be/S8KHcnoKfls
 
 ---
 
